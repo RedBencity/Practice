@@ -7,14 +7,15 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.BaseAdapter;
 import android.widget.Chronometer;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import ben.practice.R;
 import ben.practice.utils.RestDialog;
 
-public class QuestionActivity extends AppCompatActivity {
+public class QuestionActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ViewPager viewPager;
     private ArrayList<View> pageViews;
@@ -71,15 +72,7 @@ public class QuestionActivity extends AppCompatActivity {
         toolbar.setOverflowIcon(getResources().getDrawable(R.mipmap.bar_question_more));
         setSupportActionBar(toolbar);
         bar_answers = (ImageView) findViewById(R.id.bar_answers);
-        bar_answers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(QuestionActivity.this, AnswersActivity.class);
-                intent.putExtra("is_answers", isAnswers);
-                intent.putExtra("questionCount", questionCount);
-                startActivityForResult(intent, answers_requestCode);
-            }
-        });
+        bar_answers.setOnClickListener(this);
 
         setBarTime();
 
@@ -160,22 +153,45 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     private void setViewPager() {
-        for (int i = 0; i < questionCount; i++) {
-            View view = LayoutInflater.from(this).inflate(R.layout.question, null);
-            TextView question_position = (TextView) view.findViewById(R.id.question_position);
-            TextView question_total = (TextView) view.findViewById(R.id.question_total);
-            question_position.setText(i + 1 + "");
-            question_total.setText("/" + questionCount);
-            pageViews.add(view);
+        for (int i = 0; i < questionCount + 1; i++) {
+            if (i != questionCount) {
+                View view = LayoutInflater.from(this).inflate(R.layout.question_card, null);
+                TextView question_position = (TextView) view.findViewById(R.id.question_position);
+                TextView question_total = (TextView) view.findViewById(R.id.question_total);
+                question_position.setText(i + 1 + "");
+                question_total.setText("/" + questionCount);
+                pageViews.add(view);
+            } else if (i == questionCount) {
+                View view = LayoutInflater.from(this).inflate(R.layout.answers_card, null);
+                pageViews.add(view);
+            }
         }
         viewPager.setAdapter(new QuestionAdapter());
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bar_answers:
+                if(currentPosition!=questionCount){
+                    Intent intent = new Intent(QuestionActivity.this, AnswersActivity.class);
+                    intent.putExtra("is_answers", isAnswers);
+                    intent.putExtra("questionCount", questionCount);
+                    startActivityForResult(intent, answers_requestCode);
+                }else if (currentPosition==questionCount){
+
+                }
+                break;
+        }
+    }
+
+    private int currentPosition;
 
     class QuestionAdapter extends PagerAdapter implements View.OnClickListener {
 
-        RelativeLayout option_a_area, option_b_area, option_c_area, option_d_area;
-        TextView option_a, option_b, option_c, option_d;
+        private RelativeLayout option_a_area, option_b_area, option_c_area, option_d_area;
+        private TextView option_a, option_b, option_c, option_d;
+        private GridView answers_card;
 
         @Override
         public int getCount() {
@@ -201,24 +217,32 @@ public class QuestionActivity extends AppCompatActivity {
             return pageViews.get(position);
         }
 
-        int currentPosition;
 
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             currentPosition = position;
             View view = (View) object;
-            option_a_area = (RelativeLayout) view.findViewById(R.id.option_a_area);
-            option_b_area = (RelativeLayout) view.findViewById(R.id.option_b_area);
-            option_c_area = (RelativeLayout) view.findViewById(R.id.option_c_area);
-            option_d_area = (RelativeLayout) view.findViewById(R.id.option_d_area);
-            option_a = (TextView) view.findViewById(R.id.option_a);
-            option_b = (TextView) view.findViewById(R.id.option_b);
-            option_c = (TextView) view.findViewById(R.id.option_c);
-            option_d = (TextView) view.findViewById(R.id.option_d);
-            option_a_area.setOnClickListener(this);
-            option_b_area.setOnClickListener(this);
-            option_c_area.setOnClickListener(this);
-            option_d_area.setOnClickListener(this);
+            if (position != questionCount) {
+                bar_answers.setImageResource(R.drawable.selector_bar_answers);
+                option_a_area = (RelativeLayout) view.findViewById(R.id.option_a_area);
+                option_b_area = (RelativeLayout) view.findViewById(R.id.option_b_area);
+                option_c_area = (RelativeLayout) view.findViewById(R.id.option_c_area);
+                option_d_area = (RelativeLayout) view.findViewById(R.id.option_d_area);
+                option_a = (TextView) view.findViewById(R.id.option_a);
+                option_b = (TextView) view.findViewById(R.id.option_b);
+                option_c = (TextView) view.findViewById(R.id.option_c);
+                option_d = (TextView) view.findViewById(R.id.option_d);
+                option_a_area.setOnClickListener(this);
+                option_b_area.setOnClickListener(this);
+                option_c_area.setOnClickListener(this);
+                option_d_area.setOnClickListener(this);
+            } else if (position == questionCount) {
+                answers_card = (GridView) view.findViewById(R.id.answers_card_gridview);
+                answers_card.setAdapter(new AnswersAdapter());
+                bar_answers.setImageResource(R.mipmap.bar_answers_disable);
+
+
+            }
         }
 
         @Override
@@ -274,4 +298,43 @@ public class QuestionActivity extends AppCompatActivity {
         }
 
     }
+
+    class AnswersAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return isAnswers.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return isAnswers[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            convertView = LayoutInflater.from(QuestionActivity.this).inflate(R.layout.item_answers, null);
+            ImageView answers_position_bg = (ImageView) convertView.findViewById(R.id.answers_position_bg);
+            TextView answers_position = (TextView) convertView.findViewById(R.id.answers_position);
+            answers_position.setText((position + 1) + "");
+            if (isAnswers[position]) {
+                answers_position_bg.setImageResource(R.mipmap.answer_btn_answered);
+                answers_position.setTextColor(getResources().getColor(R.color.white));
+            }
+            answers_position_bg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewPager.setCurrentItem(position);
+                }
+            });
+            return convertView;
+        }
+    }
+
+
 }
