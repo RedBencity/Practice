@@ -1,5 +1,6 @@
 package ben.practice.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.view.PagerAdapter;
@@ -29,6 +30,10 @@ public class QuestionActivity extends AppCompatActivity {
     private ImageView bar_answers;
     private Chronometer bar_time;
     private ImageView bar_time_bg;
+    private int questionCount = 10;
+    private boolean[] isAnswers;
+    private int answers_requestCode = 0x123;
+    private int question_position_resultCode = 0x123;
 
 
     @Override
@@ -48,6 +53,13 @@ public class QuestionActivity extends AppCompatActivity {
 
     }
 
+    private void getData() {
+        isAnswers = new boolean[questionCount];
+        isAnswers[0] = true;
+        isAnswers[3] = true;
+        setViewPager();
+
+    }
 
     private void setToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -60,6 +72,10 @@ public class QuestionActivity extends AppCompatActivity {
         bar_answers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(QuestionActivity.this, AnswersActivity.class);
+                intent.putExtra("is_answers", isAnswers);
+                intent.putExtra("questionCount", questionCount);
+                startActivityForResult(intent, answers_requestCode);
             }
         });
 
@@ -87,14 +103,23 @@ public class QuestionActivity extends AppCompatActivity {
         });
     }
 
-    private void setBarTime(){
-        bar_time_bg = (ImageView)findViewById(R.id.bar_time_bg);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == answers_requestCode && resultCode == question_position_resultCode) {
+            int position = data.getIntExtra("question_position", 0);
+            viewPager.setCurrentItem(position);
+        }
+    }
+
+    private void setBarTime() {
+        bar_time_bg = (ImageView) findViewById(R.id.bar_time_bg);
         bar_time = (Chronometer) findViewById(R.id.bar_time);
         bar_time.setBase(SystemClock.elapsedRealtime());
         bar_time.setFormat("0%s");
         bar_time.start();
         bar_time.setOnClickListener(new View.OnClickListener() {
             long pauseTime;
+
             @Override
             public void onClick(View v) {
                 bar_time.stop();
@@ -116,17 +141,13 @@ public class QuestionActivity extends AppCompatActivity {
         bar_time.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
             public void onChronometerTick(Chronometer chronometer) {
-                if (SystemClock.elapsedRealtime() - bar_time.getBase() < 1000*599) {
+                if (SystemClock.elapsedRealtime() - bar_time.getBase() < 1000 * 599) {
                     bar_time.setFormat("0%s");
-                }else {
+                } else {
                     bar_time.setFormat("%s");
                 }
             }
         });
-    }
-
-    private void getData() {
-        setViewPager();
     }
 
 
@@ -137,10 +158,12 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     private void setViewPager() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < questionCount; i++) {
             View view = LayoutInflater.from(this).inflate(R.layout.question, null);
-            TextView textView = (TextView) view.findViewById(R.id.question_position);
-            textView.setText(i + 1 + "");
+            TextView question_position = (TextView) view.findViewById(R.id.question_position);
+            TextView question_total = (TextView) view.findViewById(R.id.question_total);
+            question_position.setText(i + 1 + "");
+            question_total.setText("/" + questionCount);
             pageViews.add(view);
         }
         viewPager.setAdapter(new QuestionAdapter());

@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:clickable="true"
-                android:src="@mipmap/bar_answers" />
+                android:src="@drawable/selector_bar_answers" />
 
             <FrameLayout
                 android:layout_width="wrap_content"

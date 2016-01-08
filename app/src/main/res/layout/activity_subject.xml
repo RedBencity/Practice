@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray1"
+    android:background="@color/white1"
     tools:context="ben.practice.activity.SubjectActivity">
 
     <include layout="@layout/layout_toolbar"
@@ -91,7 +91,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/gray1">
+            android:background="@color/white1">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -48,4 +48,5 @@
         android:layout_height="1px"
         android:layout_below="@+id/navigation_bar"
         android:background="@color/gray1" />
+
 </RelativeLayout>

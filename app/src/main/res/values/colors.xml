@@ -4,9 +4,10 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#ffffff</color>
+    <color name="white1">#f5f5f5</color>
     <color name="gray">#a1a3a6</color>
     <color name="gray1">#DEDEDE</color>
-  <color name="gray2">#8F8F8F</color>
+    <color name="gray2">#8F8F8F</color>
     <color name="blank">#000000</color>
     <color name="green">#45b97c</color>
     <color name="transparent">#00000000</color>

@@ -45,9 +45,8 @@ public class SubjectActivity extends AppCompatActivity {
         toolbar.setContentInsetsRelative(0, 0);
         head_title = (TextView)view.findViewById(R.id.head_title);
         head_title.setText(intent.getStringExtra("subject_name"));
-        bar_back = (ImageView)view.findViewById(R.id.bar_back);
-        bar_back.setVisibility(View.VISIBLE);
-        bar_back.setOnClickListener(new View.OnClickListener() {
+        toolbar.setNavigationIcon(R.drawable.selector_bar_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
