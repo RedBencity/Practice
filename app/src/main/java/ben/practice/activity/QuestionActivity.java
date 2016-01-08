@@ -7,6 +7,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Chronometer;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ public class QuestionActivity extends AppCompatActivity {
     private ImageView bar_time_bg;
     private int questionCount = 10;
     private boolean[] isAnswers;
+    private int[] results;
     private int answers_requestCode = 0x123;
     private int question_position_resultCode = 0x123;
 
@@ -55,6 +58,7 @@ public class QuestionActivity extends AppCompatActivity {
 
     private void getData() {
         isAnswers = new boolean[questionCount];
+        results = new int[questionCount];
         isAnswers[0] = true;
         isAnswers[3] = true;
         setViewPager();
@@ -169,7 +173,12 @@ public class QuestionActivity extends AppCompatActivity {
         viewPager.setAdapter(new QuestionAdapter());
     }
 
-    class QuestionAdapter extends PagerAdapter {
+
+    class QuestionAdapter extends PagerAdapter implements View.OnClickListener {
+
+        RelativeLayout option_a_area, option_b_area, option_c_area, option_d_area;
+        TextView option_a, option_b, option_c, option_d;
+
         @Override
         public int getCount() {
             return pageViews.size();
@@ -193,5 +202,69 @@ public class QuestionActivity extends AppCompatActivity {
             ((ViewPager) container).addView(pageViews.get(position));
             return pageViews.get(position);
         }
+        int currentPosition;
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            currentPosition = position;
+            View view = (View) object;
+            option_a_area = (RelativeLayout) view.findViewById(R.id.option_a_area);
+            option_b_area = (RelativeLayout) view.findViewById(R.id.option_b_area);
+            option_c_area = (RelativeLayout) view.findViewById(R.id.option_c_area);
+            option_d_area = (RelativeLayout) view.findViewById(R.id.option_d_area);
+            option_a = (TextView) view.findViewById(R.id.option_a);
+            option_b = (TextView) view.findViewById(R.id.option_b);
+            option_c = (TextView) view.findViewById(R.id.option_c);
+            option_d = (TextView) view.findViewById(R.id.option_d);
+            option_a_area.setOnClickListener(this);
+            option_b_area.setOnClickListener(this);
+            option_c_area.setOnClickListener(this);
+            option_d_area.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.option_a_area:
+                    clearChoice();
+                    option_a.setTextColor(getResources().getColor(R.color.white));
+                    option_a.setBackgroundResource(R.mipmap.option_btn_single_checked);
+                    isAnswers[currentPosition] = true;
+                    results[currentPosition] = 0;
+                    break;
+                case R.id.option_b_area:
+                    clearChoice();
+                    option_b.setTextColor(getResources().getColor(R.color.white));
+                    option_b.setBackgroundResource(R.mipmap.option_btn_single_checked);
+                    isAnswers[currentPosition] = true;
+                    results[currentPosition] = 1;
+                    break;
+                case R.id.option_c_area:
+                    clearChoice();
+                    option_c.setTextColor(getResources().getColor(R.color.white));
+                    option_c.setBackgroundResource(R.mipmap.option_btn_single_checked);
+                    isAnswers[currentPosition] = true;
+                    results[currentPosition] = 2;
+                    break;
+                case R.id.option_d_area:
+                    clearChoice();
+                    option_d.setTextColor(getResources().getColor(R.color.white));
+                    option_d.setBackgroundResource(R.mipmap.option_btn_single_checked);
+                    isAnswers[currentPosition] = true;
+                    results[currentPosition] = 3;
+                    break;
+            }
+        }
+
+        private void clearChoice() {
+            option_a.setTextColor(getResources().getColor(R.color.colorPrimary));
+            option_a.setBackgroundResource(R.mipmap.option_btn_single_normal);
+            option_b.setTextColor(getResources().getColor(R.color.colorPrimary));
+            option_b.setBackgroundResource(R.mipmap.option_btn_single_normal);
+            option_c.setTextColor(getResources().getColor(R.color.colorPrimary));
+            option_c.setBackgroundResource(R.mipmap.option_btn_single_normal);
+            option_d.setTextColor(getResources().getColor(R.color.colorPrimary));
+            option_d.setBackgroundResource(R.mipmap.option_btn_single_normal);
+        }
+
     }
 }
