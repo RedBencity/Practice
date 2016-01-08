@@ -59,8 +59,6 @@ public class QuestionActivity extends AppCompatActivity {
     private void getData() {
         isAnswers = new boolean[questionCount];
         results = new int[questionCount];
-        isAnswers[0] = true;
-        isAnswers[3] = true;
         setViewPager();
 
     }
@@ -202,7 +200,9 @@ public class QuestionActivity extends AppCompatActivity {
             ((ViewPager) container).addView(pageViews.get(position));
             return pageViews.get(position);
         }
+
         int currentPosition;
+
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             currentPosition = position;
@@ -230,6 +230,7 @@ public class QuestionActivity extends AppCompatActivity {
                     option_a.setBackgroundResource(R.mipmap.option_btn_single_checked);
                     isAnswers[currentPosition] = true;
                     results[currentPosition] = 0;
+                    viewPager.setCurrentItem(currentPosition + 1);
                     break;
                 case R.id.option_b_area:
                     clearChoice();
@@ -237,6 +238,8 @@ public class QuestionActivity extends AppCompatActivity {
                     option_b.setBackgroundResource(R.mipmap.option_btn_single_checked);
                     isAnswers[currentPosition] = true;
                     results[currentPosition] = 1;
+                    viewPager.setCurrentItem(currentPosition + 1);
+
                     break;
                 case R.id.option_c_area:
                     clearChoice();
@@ -244,6 +247,8 @@ public class QuestionActivity extends AppCompatActivity {
                     option_c.setBackgroundResource(R.mipmap.option_btn_single_checked);
                     isAnswers[currentPosition] = true;
                     results[currentPosition] = 2;
+                    viewPager.setCurrentItem(currentPosition + 1);
+
                     break;
                 case R.id.option_d_area:
                     clearChoice();
@@ -251,6 +256,8 @@ public class QuestionActivity extends AppCompatActivity {
                     option_d.setBackgroundResource(R.mipmap.option_btn_single_checked);
                     isAnswers[currentPosition] = true;
                     results[currentPosition] = 3;
+                    viewPager.setCurrentItem(currentPosition + 1);
+
                     break;
             }
         }
