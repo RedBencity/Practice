@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray1"
+    tools:context="ben.practice.activity.SubjectActivity">
+
+    <include layout="@layout/layout_toolbar"
+        android:id="@+id/subject_toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/subject_toolbar"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/question_text"
+                    style="@style/text_style_colorprimary_13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="答题量" />
+
+                <TextView
+                    android:id="@+id/question_count"
+                    style="@style/text_style_colorprimary_40sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/question_text"
+                    android:layout_marginTop="30dp"
+                    android:text="123" />
+
+                <TextView
+                    style="@style/text_style_colorprimary_13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/question_text"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_toRightOf="@id/question_count"
+                    android:text="道" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/accuracy_text"
+                    style="@style/text_style_colorprimary_13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="准确率" />
+
+                <TextView
+                    android:id="@+id/accuracy_count"
+                    style="@style/text_style_colorprimary_40sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/accuracy_text"
+                    android:layout_marginTop="30dp"
+                    android:text="80" />
+
+                <TextView
+                    style="@style/text_style_colorprimary_13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/accuracy_text"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_toRightOf="@id/accuracy_count"
+                    android:text="%" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/gray1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="英语考点测试"
+                style="@style/text_style_gray2_13sp"/>
+        </LinearLayout>
+        <ListView
+            android:id="@+id/practice_point_list"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/gray1"
+            android:dividerHeight="0.1px"
+            tools:listitem="@layout/item_practice_point"/>
+    </LinearLayout>
+</RelativeLayout>
