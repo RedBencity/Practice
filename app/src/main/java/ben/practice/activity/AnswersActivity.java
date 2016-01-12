@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -53,6 +55,7 @@ public class AnswersActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                overridePendingTransition(R.anim.in_from_left, R.anim.out_from_right);
             }
         });
     }
@@ -95,6 +98,8 @@ public class AnswersActivity extends AppCompatActivity {
                     intent.putExtra("question_position", position);
                     setResult(question_position_resultCode, intent);
                     AnswersActivity.this.finish();
+                    overridePendingTransition(R.anim.in_from_left, R.anim.out_from_right);
+
                 }
             });
             return convertView;

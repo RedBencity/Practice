@@ -1,5 +1,6 @@
 package ben.practice.activity;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -31,6 +32,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private ArrayList<View> pageViews;
     private Toolbar toolbar;
     private ImageView bar_answers;
+    private ImageView bar_scratch;
     private Chronometer bar_time;
     private ImageView bar_time_bg;
     private int questionCount = 10;
@@ -71,6 +73,8 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         toolbar.setContentInsetsRelative(0, 0);
         toolbar.setOverflowIcon(getResources().getDrawable(R.mipmap.bar_question_more));
         setSupportActionBar(toolbar);
+        bar_scratch = (ImageView) findViewById(R.id.bar_scratch);
+        bar_scratch.setOnClickListener(this);
         bar_answers = (ImageView) findViewById(R.id.bar_answers);
         bar_answers.setOnClickListener(this);
 
@@ -88,9 +92,9 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             public boolean onMenuItemClick(MenuItem item) {
 
                 switch (item.getItemId()) {
-                    case R.id.aaaa:
+                    case R.id.collect_item:
                         break;
-                    case R.id.bbbb:
+                    case R.id.share_item:
                         break;
                 }
                 return true;
@@ -173,12 +177,22 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bar_answers:
-                if(currentPosition!=questionCount){
+                if (currentPosition != questionCount) {
                     Intent intent = new Intent(QuestionActivity.this, AnswersActivity.class);
                     intent.putExtra("is_answers", isAnswers);
                     intent.putExtra("questionCount", questionCount);
+
                     startActivityForResult(intent, answers_requestCode);
-                }else if (currentPosition==questionCount){
+                    overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
+                } else if (currentPosition == questionCount) {
+
+                }
+                break;
+            case R.id.bar_scratch:
+                if (currentPosition != questionCount) {
+                    Intent intent = new Intent(QuestionActivity.this, ScratchActivity.class);
+                    startActivity(intent);
+                } else if (currentPosition == questionCount) {
 
                 }
                 break;
@@ -223,6 +237,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             currentPosition = position;
             View view = (View) object;
             if (position != questionCount) {
+                bar_scratch.setImageResource(R.drawable.selector_bar_scratch);
                 bar_answers.setImageResource(R.drawable.selector_bar_answers);
                 option_a_area = (RelativeLayout) view.findViewById(R.id.option_a_area);
                 option_b_area = (RelativeLayout) view.findViewById(R.id.option_b_area);
@@ -239,6 +254,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             } else if (position == questionCount) {
                 answers_card = (GridView) view.findViewById(R.id.answers_card_gridview);
                 answers_card.setAdapter(new AnswersAdapter());
+                bar_scratch.setImageResource(R.mipmap.bar_scratch_disable);
                 bar_answers.setImageResource(R.mipmap.bar_answers_disable);
 
 

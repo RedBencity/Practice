@@ -12,13 +12,6 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize">
 
-        <!--  <ImageView
-              android:id="@+id/bar_back"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:clickable="true"
-              android:src="@drawable/selector_bar_back" />
-  -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:clickable="true"
-                android:src="@mipmap/bar_scratch" />
+                android:src="@drawable/selector_bar_scratch" />
 
             <ImageView
                 android:id="@+id/bar_answers"
