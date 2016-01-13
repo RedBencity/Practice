@@ -112,7 +112,6 @@ public class AnswersActivity extends AppCompatActivity {
                     setResult(question_position_resultCode, intent);
                     AnswersActivity.this.finish();
                     overridePendingTransition(R.anim.in_from_left, R.anim.out_from_right);
-
                 }
             });
             return convertView;
