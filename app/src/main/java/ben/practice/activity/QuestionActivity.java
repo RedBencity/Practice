@@ -180,6 +180,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 if (currentPosition != questionCount) {
                     Intent intent = new Intent(QuestionActivity.this, AnswersActivity.class);
                     intent.putExtra("is_answers", isAnswers);
+                    intent.putExtra("results",results);
                     intent.putExtra("questionCount", questionCount);
 
                     startActivityForResult(intent, answers_requestCode);
@@ -265,6 +266,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                         Intent intent = new Intent(QuestionActivity.this,ResultActivity.class);
                         intent.putExtra("results",results);
                         startActivity(intent);
+                        finish();
                     }
                 });
 

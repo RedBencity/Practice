@@ -23,6 +23,8 @@ public class AnswersActivity extends AppCompatActivity {
     private boolean[] isAnswers;
     private int question_position_resultCode = 0x123;
     private Toolbar toolbar;
+    private TextView submit_result_btn;
+    private int[] results;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +37,24 @@ public class AnswersActivity extends AppCompatActivity {
     private void initView() {
         answers_gridview = (GridView) findViewById(R.id.answers_gridview);
         setToolbar();
+        submit_result_btn = (TextView)findViewById(R.id.submit_result_btn);
     }
 
     private void getData() {
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         questionCount = intent.getIntExtra("questionCount", 1);
         isAnswers = intent.getBooleanArrayExtra("is_answers");
+        results = intent.getIntArrayExtra("results");
         setGridView();
+        submit_result_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(AnswersActivity.this,ResultActivity.class);
+                intent1.putExtra("results",results);
+                startActivity(intent1);
+                finish();
+            }
+        });
     }
 
     private void setToolbar() {
