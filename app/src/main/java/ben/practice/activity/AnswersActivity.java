@@ -113,6 +113,7 @@ public class AnswersActivity extends AppCompatActivity {
                     AnswersActivity.this.finish();
                     overridePendingTransition(R.anim.in_from_left, R.anim.out_from_right);
                 }
+
             });
             return convertView;
         }
