@@ -8,8 +8,10 @@
     <color name="gray">#a1a3a6</color>
     <color name="gray1">#DEDEDE</color>
     <color name="gray2">#8F8F8F</color>
+    <color name="blue1">#075899</color>
     <color name="blank">#000000</color>
     <color name="green">#45b97c</color>
     <color name="transparent">#00000000</color>
     <color name="transparent1">#80a1a3a6</color>
+    <color name="blue">#017cdb</color>
 </resources>

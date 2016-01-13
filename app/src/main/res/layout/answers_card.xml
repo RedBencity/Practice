@@ -27,6 +27,7 @@
         tools:listitem="@layout/item_answers" />
 
     <TextView
+        android:id="@+id/submit_result_btn"
         style="@style/text_style_white_15sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

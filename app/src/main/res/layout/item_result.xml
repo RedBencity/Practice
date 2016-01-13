@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/white1">
-
-    <ImageView
-        android:id="@+id/answers_position_bg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@mipmap/answer_btn_cant_be_answered" />
-
     <TextView
-        android:id="@+id/answers_position"
+        android:id="@+id/result_position"
         style="@style/text_style_colorprimary_18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@mipmap/answer_btn_cant_be_answered"
         android:text="1" />
-</FrameLayout>
+</LinearLayout>

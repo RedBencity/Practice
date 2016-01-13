@@ -206,6 +206,8 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         private RelativeLayout option_a_area, option_b_area, option_c_area, option_d_area;
         private TextView option_a, option_b, option_c, option_d;
         private GridView answers_card;
+        private TextView submit_result_btn;
+
 
         @Override
         public int getCount() {
@@ -256,6 +258,15 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 answers_card.setAdapter(new AnswersAdapter());
                 bar_scratch.setImageResource(R.mipmap.bar_scratch_disable);
                 bar_answers.setImageResource(R.mipmap.bar_answers_disable);
+                submit_result_btn = (TextView)view.findViewById(R.id.submit_result_btn);
+                submit_result_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(QuestionActivity.this,ResultActivity.class);
+                        intent.putExtra("results",results);
+                        startActivity(intent);
+                    }
+                });
 
 
             }
@@ -269,7 +280,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     option_a.setTextColor(getResources().getColor(R.color.white));
                     option_a.setBackgroundResource(R.mipmap.option_btn_single_checked);
                     isAnswers[currentPosition] = true;
-                    results[currentPosition] = 0;
+                    results[currentPosition] = 1;
                     viewPager.setCurrentItem(currentPosition + 1);
                     break;
                 case R.id.option_b_area:
@@ -277,7 +288,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     option_b.setTextColor(getResources().getColor(R.color.white));
                     option_b.setBackgroundResource(R.mipmap.option_btn_single_checked);
                     isAnswers[currentPosition] = true;
-                    results[currentPosition] = 1;
+                    results[currentPosition] = 2;
                     viewPager.setCurrentItem(currentPosition + 1);
 
                     break;
@@ -286,7 +297,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     option_c.setTextColor(getResources().getColor(R.color.white));
                     option_c.setBackgroundResource(R.mipmap.option_btn_single_checked);
                     isAnswers[currentPosition] = true;
-                    results[currentPosition] = 2;
+                    results[currentPosition] = 3;
                     viewPager.setCurrentItem(currentPosition + 1);
 
                     break;
@@ -295,7 +306,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     option_d.setTextColor(getResources().getColor(R.color.white));
                     option_d.setBackgroundResource(R.mipmap.option_btn_single_checked);
                     isAnswers[currentPosition] = true;
-                    results[currentPosition] = 3;
+                    results[currentPosition] = 4;
                     viewPager.setCurrentItem(currentPosition + 1);
 
                     break;
