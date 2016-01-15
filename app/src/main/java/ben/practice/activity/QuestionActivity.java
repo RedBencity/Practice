@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 import ben.practice.R;
 import ben.practice.utils.RestDialog;
-
+//做题
 public class QuestionActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ViewPager viewPager;
@@ -36,10 +36,11 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private Chronometer bar_time;
     private ImageView bar_time_bg;
     private int questionCount = 10;
-    private boolean[] isAnswers;
+//    private boolean[] isAnswers;
     private int[] results;
     private int answers_requestCode = 0x123;
     private int question_position_resultCode = 0x123;
+    private String point_name;
 
 
     @Override
@@ -60,8 +61,10 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void getData() {
-        isAnswers = new boolean[questionCount];
+//        isAnswers = new boolean[questionCount];
         results = new int[questionCount];
+        Intent intent = getIntent();
+        point_name=intent.getStringExtra("point_name");
         setViewPager();
 
     }
@@ -118,7 +121,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         bar_time.start();
         bar_time.setOnClickListener(new View.OnClickListener() {
             long pauseTime;
-
             @Override
             public void onClick(View v) {
                 bar_time.stop();
@@ -162,6 +164,8 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 View view = LayoutInflater.from(this).inflate(R.layout.question_card, null);
                 TextView question_position = (TextView) view.findViewById(R.id.question_position);
                 TextView question_total = (TextView) view.findViewById(R.id.question_total);
+                TextView paractice_style = (TextView)view.findViewById(R.id.practice_style);
+                paractice_style.setText(point_name);
                 question_position.setText(i + 1 + "");
                 question_total.setText("/" + questionCount);
                 pageViews.add(view);
@@ -179,10 +183,10 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             case R.id.bar_answers:
                 if (currentPosition != questionCount) {
                     Intent intent = new Intent(QuestionActivity.this, AnswersActivity.class);
-                    intent.putExtra("is_answers", isAnswers);
+//                    intent.putExtra("is_answers", isAnswers);
                     intent.putExtra("results",results);
                     intent.putExtra("questionCount", questionCount);
-
+                    intent.putExtra("point_name",point_name);
                     startActivityForResult(intent, answers_requestCode);
                     overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
                 } else if (currentPosition == questionCount) {
@@ -265,6 +269,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     public void onClick(View v) {
                         Intent intent = new Intent(QuestionActivity.this,ResultActivity.class);
                         intent.putExtra("results",results);
+                        intent.putExtra("point_name",point_name);
                         startActivity(intent);
                         finish();
                     }
@@ -281,7 +286,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     clearChoice();
                     option_a.setTextColor(getResources().getColor(R.color.white));
                     option_a.setBackgroundResource(R.mipmap.option_btn_single_checked);
-                    isAnswers[currentPosition] = true;
+//                    isAnswers[currentPosition] = true;
                     results[currentPosition] = 1;
                     viewPager.setCurrentItem(currentPosition + 1);
                     break;
@@ -289,7 +294,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     clearChoice();
                     option_b.setTextColor(getResources().getColor(R.color.white));
                     option_b.setBackgroundResource(R.mipmap.option_btn_single_checked);
-                    isAnswers[currentPosition] = true;
+//                    isAnswers[currentPosition] = true;
                     results[currentPosition] = 2;
                     viewPager.setCurrentItem(currentPosition + 1);
 
@@ -298,7 +303,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     clearChoice();
                     option_c.setTextColor(getResources().getColor(R.color.white));
                     option_c.setBackgroundResource(R.mipmap.option_btn_single_checked);
-                    isAnswers[currentPosition] = true;
+//                    isAnswers[currentPosition] = true;
                     results[currentPosition] = 3;
                     viewPager.setCurrentItem(currentPosition + 1);
 
@@ -307,7 +312,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     clearChoice();
                     option_d.setTextColor(getResources().getColor(R.color.white));
                     option_d.setBackgroundResource(R.mipmap.option_btn_single_checked);
-                    isAnswers[currentPosition] = true;
+//                    isAnswers[currentPosition] = true;
                     results[currentPosition] = 4;
                     viewPager.setCurrentItem(currentPosition + 1);
 
@@ -332,12 +337,12 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
 
         @Override
         public int getCount() {
-            return isAnswers.length;
+            return results.length;
         }
 
         @Override
         public Object getItem(int position) {
-            return isAnswers[position];
+            return results[position];
         }
 
         @Override
@@ -351,7 +356,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             ImageView answers_position_bg = (ImageView) convertView.findViewById(R.id.answers_position_bg);
             TextView answers_position = (TextView) convertView.findViewById(R.id.answers_position);
             answers_position.setText((position + 1) + "");
-            if (isAnswers[position]) {
+            if (results[position]!=0) {
                 answers_position_bg.setImageResource(R.mipmap.answer_btn_answered);
                 answers_position.setTextColor(getResources().getColor(R.color.white));
             }

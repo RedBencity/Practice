@@ -17,14 +17,13 @@ import java.util.List;
 
 import ben.practice.R;
 import ben.practice.entity.PracticePointInfo;
-
+//科目
 public class SubjectActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TextView head_title;
     private ListView practice_point_list;
     private List<PracticePointInfo> practicePointInfos;
-    private ImageView bar_back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +85,7 @@ public class SubjectActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder =null;
             if(convertView ==null){
                 viewHolder = new ViewHolder();
@@ -103,6 +102,7 @@ public class SubjectActivity extends AppCompatActivity {
                 public void onClick(View v) {
 
                     Intent intent = new Intent(SubjectActivity.this,QuestionActivity.class);
+                    intent.putExtra("point_name",practicePointInfoss.get(position).getName());
                     startActivity(intent);
                 }
             });

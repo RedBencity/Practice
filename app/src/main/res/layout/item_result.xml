@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/white1">
+    android:gravity="center"
+    android:background="@color/white">
     <TextView
         android:id="@+id/result_position"
         style="@style/text_style_colorprimary_18sp"

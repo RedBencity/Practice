@@ -16,15 +16,17 @@ import android.widget.TextView;
 
 import ben.practice.R;
 
+//答题卡
 public class AnswersActivity extends AppCompatActivity {
 
     private GridView answers_gridview;
     private int questionCount;
-    private boolean[] isAnswers;
+//    private boolean[] isAnswers;
     private int question_position_resultCode = 0x123;
     private Toolbar toolbar;
     private TextView submit_result_btn;
     private int[] results;
+    private String point_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +45,16 @@ public class AnswersActivity extends AppCompatActivity {
     private void getData() {
         final Intent intent = getIntent();
         questionCount = intent.getIntExtra("questionCount", 1);
-        isAnswers = intent.getBooleanArrayExtra("is_answers");
+//        isAnswers = intent.getBooleanArrayExtra("is_answers");
         results = intent.getIntArrayExtra("results");
+        point_name = intent.getStringExtra("point_name");
         setGridView();
         submit_result_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(AnswersActivity.this,ResultActivity.class);
                 intent1.putExtra("results",results);
+                intent1.putExtra("point_name",point_name);
                 startActivity(intent1);
                 finish();
             }
@@ -81,12 +85,12 @@ public class AnswersActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return isAnswers.length;
+            return results.length;
         }
 
         @Override
         public Object getItem(int position) {
-            return isAnswers[position];
+            return results[position];
         }
 
         @Override
@@ -100,7 +104,7 @@ public class AnswersActivity extends AppCompatActivity {
             ImageView answers_position_bg = (ImageView) convertView.findViewById(R.id.answers_position_bg);
             TextView answers_position = (TextView) convertView.findViewById(R.id.answers_position);
             answers_position.setText((position + 1) + "");
-            if (isAnswers[position]) {
+            if (results[position]!=0) {
                 answers_position_bg.setImageResource(R.mipmap.answer_btn_answered);
                 answers_position.setTextColor(getResources().getColor(R.color.white));
             }
@@ -112,6 +116,7 @@ public class AnswersActivity extends AppCompatActivity {
                     setResult(question_position_resultCode, intent);
                     AnswersActivity.this.finish();
                     overridePendingTransition(R.anim.in_from_left, R.anim.out_from_right);
+
                 }
 
             });

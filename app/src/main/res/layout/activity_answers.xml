@@ -32,7 +32,7 @@
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
         android:verticalSpacing="10dp"
-        tools:listitem="@layout/item_answers" />
+        tools:listitem="@layout/item_result" />
 
     <TextView
         android:id="@+id/submit_result_btn"
