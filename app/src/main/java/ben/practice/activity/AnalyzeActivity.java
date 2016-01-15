@@ -216,6 +216,7 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
                         option_d.setTextColor(getResources().getColor(R.color.white));
                         option_d.setBackgroundResource(R.mipmap.answer_btn_right);
                         break;
+
                 }
 
 
