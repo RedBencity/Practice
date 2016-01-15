@@ -129,6 +129,19 @@ public class ResultActivity extends AppCompatActivity {
                result_position.setTextColor(getResources().getColor(R.color.white));
            }
 
+           result_position.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   Intent intent = new Intent(ResultActivity.this,QuestionActivity.class);
+                   intent.putExtra("analyze","analyze");
+                   intent.putExtra("point_name",point_name);
+                   intent.putExtra("position",position+1);
+                   intent.putExtra("right_results",right_results);
+                   startActivity(intent);
+
+               }
+           });
+
             return convertView;
         }
     }

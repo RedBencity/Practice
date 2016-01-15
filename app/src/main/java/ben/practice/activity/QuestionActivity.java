@@ -1,6 +1,5 @@
 package ben.practice.activity;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -35,8 +34,8 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private ImageView bar_scratch;
     private Chronometer bar_time;
     private ImageView bar_time_bg;
+    public static QuestionActivity instance = null;
     private int questionCount = 10;
-//    private boolean[] isAnswers;
     private int[] results;
     private int answers_requestCode = 0x123;
     private int question_position_resultCode = 0x123;
@@ -54,6 +53,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void initView() {
+        instance = this;
         setToolbar();
         pageViews = new ArrayList<View>();
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -61,7 +61,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void getData() {
-//        isAnswers = new boolean[questionCount];
         results = new int[questionCount];
         Intent intent = getIntent();
         point_name=intent.getStringExtra("point_name");

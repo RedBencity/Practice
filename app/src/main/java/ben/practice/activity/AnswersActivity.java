@@ -55,6 +55,7 @@ public class AnswersActivity extends AppCompatActivity {
                 Intent intent1 = new Intent(AnswersActivity.this,ResultActivity.class);
                 intent1.putExtra("results",results);
                 intent1.putExtra("point_name",point_name);
+                QuestionActivity.instance.finish();
                 startActivity(intent1);
                 finish();
             }
