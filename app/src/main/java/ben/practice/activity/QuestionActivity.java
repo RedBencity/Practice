@@ -44,7 +44,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
         initView();
@@ -182,7 +181,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             case R.id.bar_answers:
                 if (currentPosition != questionCount) {
                     Intent intent = new Intent(QuestionActivity.this, AnswersActivity.class);
-//                    intent.putExtra("is_answers", isAnswers);
                     intent.putExtra("results",results);
                     intent.putExtra("questionCount", questionCount);
                     intent.putExtra("point_name",point_name);

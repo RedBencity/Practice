@@ -132,13 +132,13 @@ public class ResultActivity extends AppCompatActivity {
            result_position.setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View v) {
-                   Intent intent = new Intent(ResultActivity.this,QuestionActivity.class);
+                   Intent intent = new Intent(ResultActivity.this,AnalyzeActivity.class);
                    intent.putExtra("analyze","analyze");
                    intent.putExtra("point_name",point_name);
                    intent.putExtra("position",position+1);
                    intent.putExtra("right_results",right_results);
+                   intent.putExtra("results",results);
                    startActivity(intent);
-
                }
            });
 
