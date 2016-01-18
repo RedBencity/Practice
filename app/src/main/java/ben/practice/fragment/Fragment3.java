@@ -7,13 +7,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import ben.practice.R;
+import ben.practice.adapter.ListAdapter;
 import ben.practice.listener.OnFragmentInteractionListener;
+import ben.practice.utils.Util;
 
 
 public class Fragment3 extends Fragment {
 
+    private int[] icons;
+    private String[] item_name;
+    private ListView listView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -24,8 +31,23 @@ public class Fragment3 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment3, container, false);
+        View view = inflater.inflate(R.layout.fragment3, container, false);
+        listView = (ListView) view.findViewById(R.id.listview);
+        icons = new int[]{R.mipmap.icon_default_avatar, R.mipmap.discovery_marked_question, R.mipmap.discovery_answer_count, R.mipmap.icon_misc_message,
+        R.mipmap.icon_misc_settings};
+        item_name = new String[]{"red", "错题、收藏", "做题统计", "我的消息", "设置"};
+        listView.setAdapter(new ListAdapter(getActivity(), icons, item_name));
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    Util.println("0");
+                } else if (position == 1) {
+                    Util.println("1");
+                }
+            }
+        });
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

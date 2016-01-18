@@ -17,4 +17,8 @@ public class Util {
         Log.i("width", width + "");
         return width;
     }
+
+    public static void println(String string){
+        System.out.println(string);
+    }
 }

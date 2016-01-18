@@ -9,15 +9,7 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize">
-        <!--
-                <ImageView
-                    android:id="@+id/bar_back"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:src="@drawable/selector_bar_back"
-                    android:visibility="gone"/>
-        -->
+
         <TextView
             android:id="@+id/head_title"
             style="@style/text_style_white_20sp"
@@ -25,6 +17,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="首页" />
+        <ImageView
+            android:id="@+id/head_right_btn"
+            style="@style/text_style_white_20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:src="@mipmap/bar_add"
+            android:visibility="gone"/>
     </android.support.v7.widget.Toolbar>
 
 </RelativeLayout>

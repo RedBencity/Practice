@@ -18,13 +18,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.SubjectActivity" />
-        <activity android:name=".activity.QuestionActivity"></activity>
+        <activity android:name=".activity.QuestionActivity" />
         <activity android:name=".activity.AnswersActivity" />
         <activity
             android:name=".activity.ScratchActivity"
             android:theme="@style/translucent" />
-        <activity android:name=".activity.ResultActivity"></activity>
-        <activity android:name=".activity.AnalyzeActivity"></activity>
+        <activity android:name=".activity.ResultActivity" />
+        <activity android:name=".activity.AnalyzeActivity" />
+        <activity android:name=".activity.RankActivity" />
+        <activity android:name=".activity.AlarmClockActivity"></activity>
     </application>
 
 </manifest>

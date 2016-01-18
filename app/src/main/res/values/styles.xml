@@ -23,6 +23,10 @@
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/blank</item>
     </style>
+    <style name="text_style_blank_12sp">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/blank</item>
+    </style>
     <style name="text_style_white_15sp">
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/white</item>
@@ -50,6 +54,16 @@
 
     <style name="text_style_gray2_13sp">
         <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/gray2</item>
+    </style>
+
+    <style name="text_style_gray2_15sp">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/gray2</item>
+    </style>
+
+    <style name="text_style_gray2_8sp">
+        <item name="android:textSize">8sp</item>
         <item name="android:textColor">@color/gray2</item>
     </style>
 
