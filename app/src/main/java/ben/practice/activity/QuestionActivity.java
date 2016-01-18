@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.Chronometer;
 import android.widget.GridView;
@@ -159,7 +158,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private void setViewPager() {
         for (int i = 0; i < questionCount + 1; i++) {
             if (i != questionCount) {
-                View view = LayoutInflater.from(this).inflate(R.layout.question_card, null);
+                View view = LayoutInflater.from(this).inflate(R.layout.viewpager_question_card, null);
                 TextView question_position = (TextView) view.findViewById(R.id.question_position);
                 TextView question_total = (TextView) view.findViewById(R.id.question_total);
                 TextView paractice_style = (TextView)view.findViewById(R.id.practice_style);
@@ -168,7 +167,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 question_total.setText("/" + questionCount);
                 pageViews.add(view);
             } else if (i == questionCount) {
-                View view = LayoutInflater.from(this).inflate(R.layout.answers_card, null);
+                View view = LayoutInflater.from(this).inflate(R.layout.viewpager_answers_card, null);
                 pageViews.add(view);
             }
         }

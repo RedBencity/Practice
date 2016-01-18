@@ -11,11 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Chronometer;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -114,7 +110,7 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
     private void setViewPager() {
         for (int i = 0; i < results.length + 1; i++) {
             if (i != results.length) {
-                View view = LayoutInflater.from(this).inflate(R.layout.question_card, null);
+                View view = LayoutInflater.from(this).inflate(R.layout.viewpager_question_card, null);
                 TextView question_position = (TextView) view.findViewById(R.id.question_position);
                 TextView question_total = (TextView) view.findViewById(R.id.question_total);
                 TextView paractice_style = (TextView) view.findViewById(R.id.practice_style);
@@ -123,7 +119,7 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
                 question_total.setText("/" + results.length);
                 pageViews.add(view);
             } else if (i == results.length) {
-                View view = LayoutInflater.from(this).inflate(R.layout.answers_card, null);
+                View view = LayoutInflater.from(this).inflate(R.layout.viewpager_answers_card, null);
                 pageViews.add(view);
             }
         }

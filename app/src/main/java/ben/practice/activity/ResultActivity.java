@@ -135,7 +135,7 @@ public class ResultActivity extends AppCompatActivity {
                    Intent intent = new Intent(ResultActivity.this,AnalyzeActivity.class);
                    intent.putExtra("analyze","analyze");
                    intent.putExtra("point_name",point_name);
-                   intent.putExtra("position",position+1);
+                   intent.putExtra("position",position);
                    intent.putExtra("right_results",right_results);
                    intent.putExtra("results",results);
                    startActivity(intent);
