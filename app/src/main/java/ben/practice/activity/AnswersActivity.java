@@ -20,13 +20,12 @@ import ben.practice.R;
 public class AnswersActivity extends AppCompatActivity {
 
     private GridView answers_gridview;
-    private int questionCount;
-//    private boolean[] isAnswers;
     private int question_position_resultCode = 0x123;
     private Toolbar toolbar;
     private TextView submit_result_btn;
     private int[] results;
     private String point_name;
+    private int[] right_results;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,27 +38,32 @@ public class AnswersActivity extends AppCompatActivity {
     private void initView() {
         answers_gridview = (GridView) findViewById(R.id.answers_gridview);
         setToolbar();
-        submit_result_btn = (TextView)findViewById(R.id.submit_result_btn);
+        submit_result_btn = (TextView) findViewById(R.id.submit_result_btn);
     }
 
     private void getData() {
         final Intent intent = getIntent();
-        questionCount = intent.getIntExtra("questionCount", 1);
-//        isAnswers = intent.getBooleanArrayExtra("is_answers");
         results = intent.getIntArrayExtra("results");
         point_name = intent.getStringExtra("point_name");
+        if (intent.getIntArrayExtra("right_results") != null) {
+            right_results = intent.getIntArrayExtra("right_results");
+            System.out.println(right_results);
+        }
         setGridView();
         submit_result_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(AnswersActivity.this,ResultActivity.class);
-                intent1.putExtra("results",results);
-                intent1.putExtra("point_name",point_name);
+                Intent intent1 = new Intent(AnswersActivity.this, ResultActivity.class);
+                intent1.putExtra("results", results);
+                intent1.putExtra("point_name", point_name);
                 QuestionActivity.instance.finish();
                 startActivity(intent1);
                 finish();
             }
         });
+        if (right_results!=null){
+            submit_result_btn.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setToolbar() {
@@ -102,14 +106,29 @@ public class AnswersActivity extends AppCompatActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(AnswersActivity.this).inflate(R.layout.item_answers, null);
-            ImageView answers_position_bg = (ImageView) convertView.findViewById(R.id.answers_position_bg);
+//            ImageView answers_position_bg = (ImageView) convertView.findViewById(R.id.answers_position_bg);
             TextView answers_position = (TextView) convertView.findViewById(R.id.answers_position);
             answers_position.setText((position + 1) + "");
-            if (results[position]!=0) {
-                answers_position_bg.setImageResource(R.mipmap.answer_btn_answered);
+            if (results[position] != 0) {
+                answers_position.setBackgroundResource(R.mipmap.answer_btn_answered);
                 answers_position.setTextColor(getResources().getColor(R.color.white));
             }
-            answers_position_bg.setOnClickListener(new View.OnClickListener() {
+
+            if (right_results != null) {
+
+                if (results[position] == right_results[position]) {
+                    answers_position.setTextColor(getResources().getColor(R.color.white));
+                    answers_position.setBackgroundResource(R.mipmap.answer_btn_right);
+                } else if (results[position] != right_results[position] && results[position] != 0) {
+                    answers_position.setTextColor(getResources().getColor(R.color.white));
+                    answers_position.setBackgroundResource(R.mipmap.answer_btn_wrong);
+                }
+
+
+            }
+
+
+            answers_position.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = getIntent();

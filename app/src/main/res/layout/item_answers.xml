@@ -3,19 +3,13 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/white1">
-
-    <ImageView
-        android:id="@+id/answers_position_bg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@mipmap/answer_btn_cant_be_answered" />
-
     <TextView
         android:id="@+id/answers_position"
         style="@style/text_style_colorprimary_18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@mipmap/answer_btn_cant_be_answered"
         android:text="1" />
 </FrameLayout>

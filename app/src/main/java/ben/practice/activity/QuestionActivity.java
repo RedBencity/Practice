@@ -349,14 +349,14 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(QuestionActivity.this).inflate(R.layout.item_answers, null);
-            ImageView answers_position_bg = (ImageView) convertView.findViewById(R.id.answers_position_bg);
+//            ImageView answers_position_bg = (ImageView) convertView.findViewById(R.id.answers_position_bg);
             TextView answers_position = (TextView) convertView.findViewById(R.id.answers_position);
             answers_position.setText((position + 1) + "");
             if (results[position]!=0) {
-                answers_position_bg.setImageResource(R.mipmap.answer_btn_answered);
+                answers_position.setBackgroundResource(R.mipmap.answer_btn_answered);
                 answers_position.setTextColor(getResources().getColor(R.color.white));
             }
-            answers_position_bg.setOnClickListener(new View.OnClickListener() {
+            answers_position.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     viewPager.setCurrentItem(position);

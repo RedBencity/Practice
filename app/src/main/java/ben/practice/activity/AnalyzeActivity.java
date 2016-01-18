@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -119,7 +120,12 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
                 question_total.setText("/" + results.length);
                 pageViews.add(view);
             } else if (i == results.length) {
-                View view = LayoutInflater.from(this).inflate(R.layout.viewpager_answers_card, null);
+                View view = LayoutInflater.from(this).inflate(R.layout.viewpager_analyze_return, null);
+                Button analyze_return_analyze_btn = (Button)view.findViewById(R.id.analyze_return_analyze_btn);
+                Button analyze_return_subject_btn = (Button)view.findViewById(R.id.analyze_return_subject_btn);
+                analyze_return_analyze_btn.setOnClickListener(this);
+                analyze_return_subject_btn.setOnClickListener(this);
+
                 pageViews.add(view);
             }
         }
@@ -133,8 +139,8 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
                 if (currentPosition != results.length) {
                     Intent intent = new Intent(AnalyzeActivity.this, AnswersActivity.class);
                     intent.putExtra("results", results);
-                    intent.putExtra("questionCount", results.length);
                     intent.putExtra("point_name", point_name);
+                    intent.putExtra("right_results",right_results);
                     startActivityForResult(intent, answers_requestCode);
                     overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
                 } else if (currentPosition == results.length) {
@@ -149,6 +155,14 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
 
                 }
                 break;
+            case R.id.analyze_return_analyze_btn:
+                finish();
+                break;
+            case R.id.analyze_return_subject_btn:
+                Intent intent = new Intent(AnalyzeActivity.this,SubjectActivity.class);
+                startActivity(intent);
+                break;
+
         }
     }
 
@@ -239,7 +253,8 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
 
             } else if (position == results.length) {
 
-
+                bar_scratch.setImageResource(R.mipmap.bar_scratch_disable);
+                bar_answers.setImageResource(R.mipmap.bar_answers_disable);
             }
         }
 
