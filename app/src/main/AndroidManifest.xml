@@ -27,6 +27,9 @@
         <activity android:name=".activity.AnalyzeActivity" />
         <activity android:name=".activity.RankActivity" />
         <activity android:name=".activity.AlarmClockActivity"></activity>
+        <receiver android:name=".broadcast.AlarmReceiver">
+
+        </receiver>
     </application>
 
 </manifest>
