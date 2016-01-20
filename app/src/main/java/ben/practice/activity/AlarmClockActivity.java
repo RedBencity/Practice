@@ -2,13 +2,10 @@ package ben.practice.activity;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.SystemClock;
-import android.provider.AlarmClock;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,17 +15,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
-import ben.practice.MainActivity;
 import ben.practice.R;
-import ben.practice.adapter.ListAdapter;
 import ben.practice.broadcast.AlarmReceiver;
 import ben.practice.entity.AlarmClockInfo;
 import ben.practice.utils.MyTimePickerDialog;
@@ -181,7 +173,7 @@ public class AlarmClockActivity extends AppCompatActivity {
     private void setAlarmManager(AlarmManager alarmManager, int position, long firstTime) {
         Intent intent = new Intent(AlarmClockActivity.this, AlarmReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(AlarmClockActivity.this, position, intent, 0);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, firstTime, 1000, pi);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, firstTime, 24*60*60*1000, pi);
     }
 
 
