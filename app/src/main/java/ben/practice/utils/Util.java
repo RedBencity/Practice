@@ -14,11 +14,11 @@ public class Util {
     public static int getScreenWidth(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         int width = displayMetrics.widthPixels;
-        Log.i("width", width + "");
+//        Log.i("width", width + "");
         return width;
     }
 
-    public static void println(String string){
+    public static void println(Object string){
         System.out.println(string);
     }
 }

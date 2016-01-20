@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         two.setOnClickListener(this);
         three.setOnClickListener(this);
         fragmentManager = getSupportFragmentManager();
-        setChoiceItem(0);
+        setChoiceItem(1);
     }
 
     @Override
