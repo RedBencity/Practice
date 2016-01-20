@@ -26,10 +26,11 @@
         <activity android:name=".activity.ResultActivity" />
         <activity android:name=".activity.AnalyzeActivity" />
         <activity android:name=".activity.RankActivity" />
-        <activity android:name=".activity.AlarmClockActivity"></activity>
-        <receiver android:name=".broadcast.AlarmReceiver">
+        <activity android:name=".activity.AlarmClockActivity" />
 
-        </receiver>
+        <receiver android:name=".broadcast.AlarmReceiver"></receiver>
+
+        <activity android:name=".activity.PersonalActivity"></activity>
     </application>
 
 </manifest>

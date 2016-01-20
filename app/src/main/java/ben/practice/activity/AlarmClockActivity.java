@@ -84,6 +84,7 @@ public class AlarmClockActivity extends AppCompatActivity {
             }
         });
 
+        head_right_btn.setBackgroundDrawable(Util.newSelector(AlarmClockActivity.this,R.mipmap.bar_add, R.mipmap.bar_add_pressed));
         final AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         head_right_btn.setOnClickListener(new View.OnClickListener() {
             @Override

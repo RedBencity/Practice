@@ -2,33 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@drawable/shape_dialog_rest">
+    android:background="@drawable/shape_dialog_rest"
+    android:orientation="vertical">
 
     <TimePicker
         android:id="@+id/time_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@color/gray2" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <Button
             android:id="@+id/time_picker_left_btn"
-            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="确定"/>
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/shape_btn2"
+            android:textColor="@color/colorPrimary"
+            android:text="确定" />
+
         <Button
             android:id="@+id/time_picker_right_btn"
-            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="取消"/>
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/shape_btn2"
+            android:textColor="@color/colorPrimary"
+
+            android:text="取消" />
     </LinearLayout>
 </LinearLayout>
