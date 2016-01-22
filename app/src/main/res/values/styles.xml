@@ -37,6 +37,11 @@
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
+    <style name="text_style_colorprimary_15sp">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
     <style name="text_style_colorprimary_18sp">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/colorPrimary</item>
@@ -60,6 +65,16 @@
     <style name="text_style_gray2_15sp">
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/gray2</item>
+    </style>
+
+    <style name="text_style_gray3_13sp">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/gray3</item>
+    </style>
+
+    <style name="text_style_gray3_15sp">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/gray3</item>
     </style>
 
     <style name="text_style_gray2_8sp">

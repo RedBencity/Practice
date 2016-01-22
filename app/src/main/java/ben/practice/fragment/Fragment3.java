@@ -1,6 +1,7 @@
 package ben.practice.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import ben.practice.R;
+import ben.practice.activity.PersonalActivity;
+import ben.practice.activity.RankActivity;
 import ben.practice.adapter.ListAdapter;
 import ben.practice.listener.OnFragmentInteractionListener;
 import ben.practice.utils.Util;
@@ -40,8 +43,10 @@ public class Fragment3 extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent;
                 if (position == 0) {
-                    Util.println("0");
+                    intent = new Intent(getActivity(), PersonalActivity.class);
+                    startActivity(intent);
                 } else if (position == 1) {
                     Util.println("1");
                 }
