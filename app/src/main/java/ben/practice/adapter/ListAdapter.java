@@ -27,6 +27,7 @@ import java.io.File;
 import ben.practice.MainActivity;
 import ben.practice.R;
 import ben.practice.activity.PersonalActivity;
+import ben.practice.activity.PublicActivity;
 import ben.practice.activity.RankActivity;
 import ben.practice.utils.PhotoDialog;
 import ben.practice.utils.Util;
@@ -125,7 +126,15 @@ public class ListAdapter extends BaseAdapter {
                 });
             } else if (item_names[position].equals("修改密码")) {
                 item_text.setText("");
-            } else {
+            } else if (item_names[position].equals("昵称")) {
+                item_area.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PersonalActivity personalActivity = (PersonalActivity) activity;
+                        Intent intent = new Intent(personalActivity, PublicActivity.class);
+                        personalActivity.startActivityForResult(intent, 0x123);
+                    }
+                });
 
             }
         }

@@ -172,6 +172,8 @@ public class PersonalActivity extends AppCompatActivity {
                 Toast.makeText(PersonalActivity.this, "设置头像失败", Toast.LENGTH_SHORT).show();
             }
             //			}
+        } else if (requestCode == 0x123){
+            Toast.makeText(PersonalActivity.this, "aaaaaaa", Toast.LENGTH_SHORT).show();
         }
     }
 

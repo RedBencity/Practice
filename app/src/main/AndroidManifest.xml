@@ -3,7 +3,7 @@
     package="ben.practice">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -29,9 +29,13 @@
         <activity android:name=".activity.RankActivity" />
         <activity android:name=".activity.AlarmClockActivity" />
 
-        <receiver android:name=".broadcast.AlarmReceiver"></receiver>
+        <receiver android:name=".broadcast.AlarmReceiver" />
 
-        <activity android:name=".activity.PersonalActivity"></activity>
+        <activity android:name=".activity.PersonalActivity" />
+        <activity
+            android:name=".activity.PublicActivity"
+            android:label="@string/title_activity_public"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
