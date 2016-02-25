@@ -6,9 +6,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
+import android.os.Environment;
+import android.text.Editable;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 import ben.practice.R;
 
@@ -17,45 +26,56 @@ import ben.practice.R;
  */
 public class Util {
 
+    public static String USERNAME;
 
+    public static void colseKeybord(EditText editText, Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+    }
+
+    //获取屏幕宽
     public static int getScreenWidth(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         int width = displayMetrics.widthPixels;
         return width;
     }
 
-    public static int getViewWidth(View view){
+    //获取View宽
+    public static int getViewWidth(View view) {
         int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        view.measure(w,h);
+        view.measure(w, h);
         int width = view.getMeasuredWidth();
 //        System.out.println("measure width=" + width + " height=" + height);
         return width;
     }
 
-    public static int getImageWidth(Context context,int imageId){
+    //获取图片宽
+    public static int getImageWidth(Context context, int imageId) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(context.getResources(), imageId, opts);
         opts.inSampleSize = 1;
         opts.inJustDecodeBounds = false;
-        int width=opts.outWidth;
-        int height=opts.outHeight;
+        int width = opts.outWidth;
+        int height = opts.outHeight;
 
         return width;
     }
 
-    public static int getImageHeight(Context context,int imageId){
+    //获取图片宽
+    public static int getImageHeight(Context context, int imageId) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(context.getResources(), imageId, opts);
         opts.inSampleSize = 1;
         opts.inJustDecodeBounds = false;
-        int height=opts.outHeight;
+        int height = opts.outHeight;
         return height;
     }
 
-    public static int getViewHeight(View view){
+    //获取View高
+    public static int getViewHeight(View view) {
         int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         view.measure(w, h);
@@ -64,13 +84,14 @@ public class Util {
         return height;
     }
 
-    public static int getScreendensity(Context context) {
+    //获取屏幕密度
+    public static int getScreenDensity(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float density = displayMetrics.density;
-        return (int)density;
+        return (int) density;
     }
 
-    public static void printlnViewSize(View view){
+    public static void printlnViewSize(View view) {
         int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         view.measure(w, h);
@@ -79,11 +100,11 @@ public class Util {
         System.out.println("measure width=" + width + " height=" + height);
     }
 
-    public static void println(Object string){
+    public static void println(Object string) {
         System.out.println(string);
     }
 
-    public static StateListDrawable newSelector(Context context,int idNormal, int idPressed) {
+    public static StateListDrawable newSelector(Context context, int idNormal, int idPressed) {
         StateListDrawable stateListDrawable = new StateListDrawable();
         Drawable normal = idNormal == -1 ? null : context.getResources().getDrawable(idNormal);
         Drawable pressed = idPressed == -1 ? null : context.getResources().getDrawable(idPressed);
@@ -91,5 +112,58 @@ public class Util {
 
         stateListDrawable.addState(new int[]{}, normal);
         return stateListDrawable;
+    }
+
+    public static String convertBitmapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] bitmapByte = baos.toByteArray();
+        return Base64.encodeToString(bitmapByte, Base64.DEFAULT);
+    }
+
+    public static Bitmap convertStringToBitmap(String str) {
+
+        byte[] bitmapArray = Base64.decode(str, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
+    }
+
+    public static void setToast(Activity activity, String str) {
+        Toast toast = Toast.makeText(activity, str, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+    // 字符串是否为空（全是不可见字符的字符串认为是空）
+    public static boolean isStrEmpty(Editable poStr) {
+        String lsStr = poStr.toString();
+        return isStrEmpty(lsStr);
+    }
+
+    // 字符串是否为空（全是不可见字符的字符串认为是空）
+    public static boolean isStrEmpty(String psStr) {
+        return psStr == null || psStr.trim().length() == 0;
+    }
+
+    //判断SD卡有无选择路径
+    public static File getDiskCacheDir(Context context, String uniqueName) {
+        String cachePath;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                || !Environment.isExternalStorageRemovable()) {
+            cachePath = context.getExternalCacheDir().getPath();
+        } else {
+            cachePath = context.getCacheDir().getPath();
+        }
+        return new File(cachePath + File.separator + uniqueName);
+    }
+
+    public static String getDiskCacheDirName(Context context, String uniqueName) {
+        String cachePath;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                || !Environment.isExternalStorageRemovable()) {
+            cachePath = context.getExternalCacheDir().getPath();
+        } else {
+            cachePath = context.getCacheDir().getPath();
+        }
+        System.out.println("-------------------" + cachePath + File.separator + uniqueName);
+        return (cachePath + File.separator + uniqueName);
     }
 }

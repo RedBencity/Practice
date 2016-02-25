@@ -27,6 +27,7 @@
         android:text="排行榜" />
 
     <ImageView
+        android:id="@+id/item_arrow_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

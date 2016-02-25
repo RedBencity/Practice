@@ -13,7 +13,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -24,17 +23,13 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import ben.practice.MainActivity;
 import ben.practice.R;
 import ben.practice.adapter.ListAdapter;
 import ben.practice.utils.Util;
@@ -132,10 +127,8 @@ public class PersonalActivity extends AppCompatActivity {
             }
         } else if (requestCode == SET_ALBUM_PICTURE_KITKAT) {
             Log.i("zou", "4.4以上上的 RESULT_OK");
-
             Bitmap bitmap = decodeUriAsBitmap(Uri.fromFile(new File(IMGPATH, TMP_IMAGE_FILE_NAME)));
             setPhoto(bitmap);
-
 //			Log.i("zou", "4.4以上上的 RESULT_OK");
 //			Bitmap bitmap = data.getParcelableExtra("data");
 //			mAcountHeadIcon.setImageBitmap(bitmap);
@@ -174,6 +167,8 @@ public class PersonalActivity extends AppCompatActivity {
             //			}
         } else if (requestCode == 0x123){
             Toast.makeText(PersonalActivity.this, "aaaaaaa", Toast.LENGTH_SHORT).show();
+        }else if (requestCode == 0x124){
+            Toast.makeText(PersonalActivity.this, "bbbbbbbbbbbbbbbbb", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -227,8 +222,8 @@ public class PersonalActivity extends AppCompatActivity {
         intent.putExtra("crop", "true");
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
-        intent.putExtra("outputX", Util.getImageWidth(PersonalActivity.this, R.mipmap.icon_default_avatar) * Util.getScreendensity(PersonalActivity.this));
-        intent.putExtra("outputY", Util.getImageHeight(PersonalActivity.this, R.mipmap.icon_default_avatar) * Util.getScreendensity(PersonalActivity.this));
+        intent.putExtra("outputX", Util.getImageWidth(PersonalActivity.this, R.mipmap.icon_default_avatar) * Util.getScreenDensity(PersonalActivity.this));
+        intent.putExtra("outputY", Util.getImageHeight(PersonalActivity.this, R.mipmap.icon_default_avatar) * Util.getScreenDensity(PersonalActivity.this));
         intent.putExtra("scale", true);
         intent.putExtra("return-data", false);
         intent.putExtra(MediaStore.EXTRA_OUTPUT,
@@ -265,8 +260,8 @@ public class PersonalActivity extends AppCompatActivity {
         intent.putExtra("crop", "true");
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
-        intent.putExtra("outputX", Util.getImageWidth(PersonalActivity.this, R.mipmap.icon_default_avatar) * Util.getScreendensity(PersonalActivity.this));
-        intent.putExtra("outputY", Util.getImageHeight(PersonalActivity.this, R.mipmap.icon_default_avatar) * Util.getScreendensity(PersonalActivity.this));
+        intent.putExtra("outputX", Util.getImageWidth(PersonalActivity.this, R.mipmap.icon_default_avatar) * Util.getScreenDensity(PersonalActivity.this));
+        intent.putExtra("outputY", Util.getImageHeight(PersonalActivity.this, R.mipmap.icon_default_avatar) * Util.getScreenDensity(PersonalActivity.this));
         intent.putExtra("scale", true);
         //		if (mIsKitKat) {
         //			intent.putExtra("return-data", true);
@@ -293,8 +288,8 @@ public class PersonalActivity extends AppCompatActivity {
         intent.putExtra("crop", "true");
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
-        intent.putExtra("outputX", Util.getImageWidth(PersonalActivity.this, R.mipmap.icon_default_avatar) * Util.getScreendensity(PersonalActivity.this));
-        intent.putExtra("outputY", Util.getImageHeight(PersonalActivity.this, R.mipmap.icon_default_avatar) * Util.getScreendensity(PersonalActivity.this));
+        intent.putExtra("outputX", Util.getImageWidth(PersonalActivity.this, R.mipmap.icon_default_avatar) * Util.getScreenDensity(PersonalActivity.this));
+        intent.putExtra("outputY", Util.getImageHeight(PersonalActivity.this, R.mipmap.icon_default_avatar) * Util.getScreenDensity(PersonalActivity.this));
         intent.putExtra("scale", true);
         //		intent.putExtra("return-data", true);
         intent.putExtra("return-data", false);

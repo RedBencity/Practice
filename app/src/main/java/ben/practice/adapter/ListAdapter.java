@@ -2,17 +2,7 @@ package ben.practice.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.RectF;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,17 +10,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.io.File;
 
 import ben.practice.MainActivity;
 import ben.practice.R;
 import ben.practice.activity.PersonalActivity;
-import ben.practice.activity.PublicActivity;
 import ben.practice.activity.RankActivity;
 import ben.practice.utils.PhotoDialog;
-import ben.practice.utils.Util;
 
 /**
  * Created by Administrator on 2016/1/18 0018.
@@ -68,7 +53,7 @@ public class ListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         if (activity instanceof MainActivity) {
             convertView = LayoutInflater.from(activity).inflate(R.layout.item_style, null);
             ImageView imageView = (ImageView) convertView.findViewById(R.id.icon);
@@ -89,6 +74,8 @@ public class ListAdapter extends BaseAdapter {
             RelativeLayout item_area = (RelativeLayout) convertView.findViewById(R.id.item_area);
             TextView item_name = (TextView) convertView.findViewById(R.id.personal_style);
             TextView item_text = (TextView) convertView.findViewById(R.id.personal_text);
+            ImageView personal_arrow_right = (ImageView) convertView.findViewById(R.id.personal_arrow_right);
+
             item_name.setText(item_names[position]);
             if (item_names[position].equals("头像")) {
                 item_text.setText("");
@@ -126,16 +113,28 @@ public class ListAdapter extends BaseAdapter {
                 });
             } else if (item_names[position].equals("修改密码")) {
                 item_text.setText("");
+                item_area.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PersonalActivity personalActivity = (PersonalActivity) activity;
+                        Intent intent = new Intent(personalActivity, ben.practice.activity.PersonalPublicActivity.class);
+                        intent.putExtra("style", item_names[position]);
+                        personalActivity.startActivityForResult(intent, 0x124);
+                    }
+                });
             } else if (item_names[position].equals("昵称")) {
                 item_area.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         PersonalActivity personalActivity = (PersonalActivity) activity;
-                        Intent intent = new Intent(personalActivity, PublicActivity.class);
+                        Intent intent = new Intent(personalActivity, ben.practice.activity.PersonalPublicActivity.class);
+                        intent.putExtra("style", item_names[position]);
                         personalActivity.startActivityForResult(intent, 0x123);
                     }
                 });
 
+            } else if (item_names[position].equals("账号信息")) {
+                personal_arrow_right.setVisibility(View.INVISIBLE);
             }
         }
         return convertView;

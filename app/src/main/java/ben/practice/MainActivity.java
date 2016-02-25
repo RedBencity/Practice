@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        getData();
     }
 
     private void initView() {
@@ -55,6 +56,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setChoiceItem(2);
     }
 
+
+    private void getData(){
+
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

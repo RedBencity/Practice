@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.PersonalPublicActivity"
+    tools:showIn="@layout/activity_personal_public">
+
+    <include
+        android:id="@+id/public_toolbar"
+        layout="@layout/layout_toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/public_toolbar"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp">
+
+            <TextView
+                android:id="@+id/one_text"
+                style="@style/text_style_blank_18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="昵称:" />
+
+            <EditText
+                android:id="@+id/one_edit"
+                style="@style/text_style_blank_18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/one_text"
+                android:background="@color/transparent"
+                android:hint="2-12汉字" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/one_text"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorPrimary" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/two_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/two_text"
+                style="@style/text_style_blank_18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="昵称:" />
+
+            <EditText
+                android:id="@+id/two_edit"
+                style="@style/text_style_blank_18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/two_text"
+                android:background="@color/transparent"
+                android:hint="2-12汉字" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/two_text"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorPrimary" />
+        </RelativeLayout>
+
+
+        <Button
+            style="@style/text_style_white_18sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@color/colorPrimary"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="完成" />
+    </LinearLayout>
+
+</RelativeLayout>
