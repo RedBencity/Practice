@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (fragment3 != null) {
             transaction.hide(fragment3);
+
         }
 
     }
