@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -33,6 +35,7 @@ import com.android.volley.toolbox.Volley;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import ben.practice.MainActivity;
 import ben.practice.R;
@@ -40,6 +43,11 @@ import ben.practice.utils.BitmapUtil;
 import ben.practice.utils.NetUtil;
 
 import ben.practice.utils.Util;
+import cn.smssdk.EventHandler;
+import cn.smssdk.SMSSDK;
+import cn.smssdk.gui.RegisterPage;
+
+import android.os.Handler.Callback;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -53,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button login_btn_clear_username;
     private Button login_btn_clear_password;
     private Button login_btn_register;
-    private Button login_btn_traveller;
+    private Button login_btn_find_password;
 
     private Handler hander;
     private boolean slidingBack;
@@ -68,18 +76,26 @@ public class LoginActivity extends AppCompatActivity {
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
+    private boolean ready = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-
-        setContentView(R.layout.activity_login);
+        SMSSDK.initSDK(this, "fc574ead4d5c", "f5114ca3eb1938aab29b1f3c919b7fa3");
         initView();
         initData();
     }
+
+    protected void onDestroy() {
+        if (ready) {
+            // 销毁回调监听接口
+            SMSSDK.unregisterAllEventHandler();
+        }
+        super.onDestroy();
+    }
+
     private void initView() {
         login_img_photo = (ImageView) findViewById(R.id.login_img_photo);
         login_img_progress = (ImageView) findViewById(R.id.login_img_progress);
@@ -91,18 +107,21 @@ public class LoginActivity extends AppCompatActivity {
         login_btn_clear_username = (Button) findViewById(R.id.login_btn_clear_username);
         login_btn_clear_password = (Button) findViewById(R.id.login_btn_clear_password);
         login_btn_register = (Button) findViewById(R.id.login_btn_register);
-        login_btn_traveller = (Button) findViewById(R.id.login_btn_traveller);
+        login_btn_find_password = (Button) findViewById(R.id.login_btn_find_password);
         slidingBack = false;
         lastX = 0;
         slidingMinX = 0;
         slidingMaxX = 0;
 
-        preferences = getSharedPreferences("phone",MODE_PRIVATE);
+        preferences = getSharedPreferences("constants", MODE_PRIVATE);
         editor = preferences.edit();
+
+
     }
 
-    private void initData() {
 
+
+    private void initData() {
         hander = new Handler() {
             @Override
             public void handleMessage(Message message) {
@@ -223,7 +242,6 @@ public class LoginActivity extends AppCompatActivity {
                                 lastX = liX;
                                 if (lastX == slidingMaxX) {
                                     checkUser();
-                                    //checkUser();
                                 }
                             }
                             break;
@@ -241,18 +259,53 @@ public class LoginActivity extends AppCompatActivity {
         login_btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                finish();
-                startActivity(intent);
+                //打开注册页面
+                RegisterPage registerPage = new RegisterPage();
+                registerPage.setRegisterCallback(new EventHandler() {
+                    public void afterEvent(int event, int result, Object data) {
+//                      解析注册结果
+                        if (result == SMSSDK.RESULT_COMPLETE) {
+                            @SuppressWarnings("unchecked")
+                            HashMap<String, Object> phoneMap = (HashMap<String, Object>) data;
+//                            String country = (String) phoneMap.get("country");
+                            String phone = (String) phoneMap.get("phone");
+//                          提交用户信息
+                            registerUser(phone);
+                        }
+                    }
+                });
+                ready = true;
+                registerPage.show(LoginActivity.this);
             }
         });
 
-        login_btn_traveller.setOnClickListener(new View.OnClickListener() {
+        login_btn_find_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //打开注册页面
+                RegisterPage registerPage = new RegisterPage();
+                registerPage.setRegisterCallback(new EventHandler() {
+                    public void afterEvent(int event, int result, Object data) {
+//                      解析注册结果
+                        if (result == SMSSDK.RESULT_COMPLETE) {
+                            @SuppressWarnings("unchecked")
+                            HashMap<String, Object> phoneMap = (HashMap<String, Object>) data;
+//                            String country = (String) phoneMap.get("country");
+                            String phone = (String) phoneMap.get("phone");
+//                          提交用户信息
+                            updateUserPassword(phone);
+                        }
+                    }
+                });
+                ready = true;
+                registerPage.show(LoginActivity.this);
             }
         });
+    }
+
+    // 提交用户信息
+    private void registerUser(String phone) {
+            checkUserBySMS(phone);
     }
 
 
@@ -318,7 +371,8 @@ public class LoginActivity extends AppCompatActivity {
 //                    Bitmap bm = ((BitmapDrawable) login_img_photo.getDrawable()).getBitmap();
 //                    putExtra.put("photo", Util.convertBitmapToString(bm));
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("phone", login_edit_username.getText().toString());
+                    editor.putString("phone", login_edit_username.getText().toString());
+                    editor.commit();
                     finish();
                     startActivity(intent);
                 }
@@ -333,7 +387,7 @@ public class LoginActivity extends AppCompatActivity {
             login_edit_username.setVisibility(View.GONE);
             login_edit_password.setVisibility(View.GONE);
             login_btn_register.setVisibility(View.GONE);
-            login_btn_traveller.setVisibility(View.GONE);
+            login_btn_find_password.setVisibility(View.GONE);
             login_btn_clear_username.setVisibility(View.GONE);
             login_btn_clear_password.setVisibility(View.GONE);
             login_layout_welcome.setVisibility(View.VISIBLE);
@@ -361,7 +415,7 @@ public class LoginActivity extends AppCompatActivity {
         login_btn_clear_username.setVisibility(View.VISIBLE);
         login_btn_clear_password.setVisibility(View.VISIBLE);
         login_btn_register.setVisibility(View.VISIBLE);
-        login_btn_traveller.setVisibility(View.VISIBLE);
+        login_btn_find_password.setVisibility(View.VISIBLE);
         login_layout_welcome.setVisibility(View.GONE);
     }
 
@@ -408,6 +462,7 @@ public class LoginActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 //在这里设置需要post的参数
                 Map<String, String> map = new HashMap<String, String>();
+                map.put("requestType","login");
                 map.put("phone", login_edit_username.getText().toString());
                 map.put("password", login_edit_password.getText().toString());
                 return map;
@@ -416,6 +471,80 @@ public class LoginActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+
+    private void updateUserPassword(final String phone){
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        String url = NetUtil.URL + "/servlet/LoginServer";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                System.out.println(response);
+                Util.setToast(LoginActivity.this, "修改成功！默认密码 123456 !",5000);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                slideBack();
+                Util.setToast(LoginActivity.this, "服务器异常!");
+                Log.e("TAG", error.getMessage(), error);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //在这里设置需要post的参数
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("requestType","find_password");
+                map.put("phone", phone);
+                return map;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    //手机短信验证登录
+    private void checkUserBySMS(final String phone) {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        String url = NetUtil.URL + "/servlet/LoginServer";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                System.out.println(response);
+                if (Boolean.parseBoolean(response)){
+                    Util.setToast(LoginActivity.this, "您已注册过，直接登录！");
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    editor.putString("phone", phone);
+                    editor.commit();
+                    finish();
+                    startActivity(intent);
+                }else {
+                    Util.setToast(LoginActivity.this, "注册成功！请尽快修改密码！");
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    editor.putString("phone", phone);
+                    editor.commit();
+                    finish();
+                    startActivity(intent);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                slideBack();
+                Util.setToast(LoginActivity.this, "服务器异常!");
+                Log.e("TAG", error.getMessage(), error);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //在这里设置需要post的参数
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("requestType","register");
+                map.put("phone", phone);
+                return map;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
 
 
 

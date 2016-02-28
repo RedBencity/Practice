@@ -132,6 +132,11 @@ public class Util {
         toast.show();
     }
 
+    public static void setToast(Activity activity, String str,int duration) {
+        Toast toast = Toast.makeText(activity, str, duration);
+        toast.show();
+    }
+
     // 字符串是否为空（全是不可见字符的字符串认为是空）
     public static boolean isStrEmpty(Editable poStr) {
         String lsStr = poStr.toString();
