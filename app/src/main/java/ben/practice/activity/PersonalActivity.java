@@ -38,13 +38,17 @@ import com.android.volley.toolbox.Volley;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import ben.practice.R;
 import ben.practice.adapter.ListAdapter;
+import ben.practice.utils.BitmapUtil;
 import ben.practice.utils.NetUtil;
 import ben.practice.utils.Util;
+import ben.practice.utils.multipart.multipart.MultiPartStack;
+import ben.practice.utils.multipart.multipart.MultiPartStringRequest;
 
 public class PersonalActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -234,7 +238,46 @@ public class PersonalActivity extends AppCompatActivity {
     private void setPhoto(Bitmap bitmap) {
         View view = personal_listview.getChildAt(0);
         TextView textView = (TextView) view.findViewById(R.id.personal_text);
-        textView.setBackgroundDrawable(new BitmapDrawable(toRoundBitmap(bitmap)));
+        Bitmap bm = toRoundBitmap(bitmap);
+        try {
+           String path =  BitmapUtil.saveFile(this,bm,preferences.getString("phone","default"));
+            uploadPhoto(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        textView.setBackgroundDrawable(new BitmapDrawable(bm));
+    }
+
+    private void uploadPhoto(final String path){
+        RequestQueue requestQueue = Volley.newRequestQueue(this, new MultiPartStack());
+        String url = NetUtil.URL + "/servlet/PhotoServer";
+        MultiPartStringRequest multiPartStringRequest = new MultiPartStringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                Util.println(s);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Util.setToast(PersonalActivity.this,"服务器异常或网络异常");
+            }
+        }) {
+            @Override
+            public Map<String, File> getFileUploads() {
+                Map<String, File> files = new HashMap<String, File>();
+                files.put("photo", new File(path));
+                return files;
+            }
+
+            @Override
+            public Map<String, String> getStringUploads() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("requestType","uploadPhoto");
+                params.put("phone",preferences.getString("phone","default"));
+                return params;
+            }
+        };
+        requestQueue.add(multiPartStringRequest);
     }
 
     private void createFile() {

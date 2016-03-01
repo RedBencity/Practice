@@ -2,14 +2,17 @@ package ben.practice.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.Base64;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -55,17 +58,30 @@ public class BitmapUtil {
 
     //bitmap转file并获取地址
     public static String saveFile(Context context,Bitmap bm, String fileName) throws IOException {
-        String path = Util.getDiskCacheDirName(context, "postcrossing");
+        String path = Util.getDiskCacheDirName(context, "practice");
         File dirFile = new File(path);
         if(!dirFile.exists()){
             dirFile.mkdir();
         }
-        File myCaptureFile = new File(path + File.separator+ fileName+".png");
+        File myCaptureFile = new File(path +File.separator+ fileName+".png");
         BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
         bm.compress(Bitmap.CompressFormat.PNG, 100, bos);
         bos.flush();
         bos.close();
         System.out.println(myCaptureFile);
-        return path + File.separator+ fileName+".png";
+        return path +File.separator+ fileName+".png";
+    }
+
+    public static String convertBitmapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] bitmapByte = baos.toByteArray();
+        return Base64.encodeToString(bitmapByte, Base64.DEFAULT);
+    }
+
+    public static Bitmap convertStringToBitmap(String str) {
+
+        byte[] bitmapArray = Base64.decode(str, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
     }
 }

@@ -16,8 +16,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import ben.practice.R;
 
@@ -25,8 +28,6 @@ import ben.practice.R;
  * Created by Administrator on 2016/1/7 0007.
  */
 public class Util {
-
-    public static String USERNAME;
 
     public static void colseKeybord(EditText editText, Context context) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -114,18 +115,7 @@ public class Util {
         return stateListDrawable;
     }
 
-    public static String convertBitmapToString(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] bitmapByte = baos.toByteArray();
-        return Base64.encodeToString(bitmapByte, Base64.DEFAULT);
-    }
 
-    public static Bitmap convertStringToBitmap(String str) {
-
-        byte[] bitmapArray = Base64.decode(str, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
-    }
 
     public static void setToast(Activity activity, String str) {
         Toast toast = Toast.makeText(activity, str, Toast.LENGTH_SHORT);
@@ -171,4 +161,6 @@ public class Util {
         System.out.println("-------------------" + cachePath + File.separator + uniqueName);
         return (cachePath + File.separator + uniqueName);
     }
+
+
 }
