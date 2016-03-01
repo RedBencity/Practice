@@ -1,9 +1,11 @@
 package ben.practice.activity;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,17 +29,31 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 import ben.practice.R;
 import ben.practice.adapter.ListAdapter;
+import ben.practice.utils.NetUtil;
 import ben.practice.utils.Util;
 
 public class PersonalActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ListView personal_listview;
     private String[] itemNames;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
+    private TextView personal_login_out;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +68,25 @@ public class PersonalActivity extends AppCompatActivity {
         setToolbar();
         personal_listview = (ListView) findViewById(R.id.personal_listview);
         itemNames = new String[]{"头像", "昵称", "账号信息", "修改密码"};
+        preferences = getSharedPreferences("constants", MODE_PRIVATE);
+        editor = preferences.edit();
+        personal_login_out = (TextView)findViewById(R.id.personal_login_out);
+
     }
 
     private void getData() {
         personal_listview.setAdapter(new ListAdapter(PersonalActivity.this, itemNames));
         createFile();
+        personal_login_out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editor.clear();
+                editor.commit();
+                Intent intent = new Intent(PersonalActivity.this,LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
 
 
     }
@@ -165,11 +195,40 @@ public class PersonalActivity extends AppCompatActivity {
                 Toast.makeText(PersonalActivity.this, "设置头像失败", Toast.LENGTH_SHORT).show();
             }
             //			}
-        } else if (requestCode == 0x123){
-            Toast.makeText(PersonalActivity.this, "aaaaaaa", Toast.LENGTH_SHORT).show();
-        }else if (requestCode == 0x124){
-            Toast.makeText(PersonalActivity.this, "bbbbbbbbbbbbbbbbb", Toast.LENGTH_SHORT).show();
+        } else if (requestCode == 0x123 && resultCode == 0x123) {
+            View view = personal_listview.getChildAt(1);
+            TextView textView = (TextView) view.findViewById(R.id.personal_text);
+            getNicknameFromServer(this, textView);
         }
+    }
+
+    private void getNicknameFromServer(final Activity activity, final TextView textView) {
+        String url = NetUtil.URL + "/servlet/PersonalServer";
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                System.out.println(response);
+                textView.setText(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Util.setToast(activity, "服务器异常!");
+                Log.e("TAG", error.getMessage(), error);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //在这里设置需要post的参数
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("requestType", "getNickname");
+                map.put("phone", preferences.getString("phone", "defalut"));
+                return map;
+            }
+        };
+        requestQueue.add(stringRequest);
+
     }
 
     private void setPhoto(Bitmap bitmap) {

@@ -2,20 +2,35 @@ package ben.practice.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import ben.practice.MainActivity;
 import ben.practice.R;
 import ben.practice.activity.PersonalActivity;
 import ben.practice.activity.RankActivity;
+import ben.practice.utils.NetUtil;
 import ben.practice.utils.PhotoDialog;
+import ben.practice.utils.Util;
 
 /**
  * Created by Administrator on 2016/1/18 0018.
@@ -24,6 +39,7 @@ public class ListAdapter extends BaseAdapter {
     private int[] icons;
     private String[] item_names;
     private Activity activity;
+    private SharedPreferences preferences;
 
     public ListAdapter(Activity activity, int[] icons, String[] item_names) {
         this.activity = activity;
@@ -70,6 +86,7 @@ public class ListAdapter extends BaseAdapter {
             rank_photo.setImageResource(icons[position]);
             rank_username.setText(item_names[position]);
         } else if (activity instanceof PersonalActivity) {
+            preferences = activity.getSharedPreferences("constants", activity.MODE_PRIVATE);
             convertView = LayoutInflater.from(activity).inflate(R.layout.item_personal, null);
             RelativeLayout item_area = (RelativeLayout) convertView.findViewById(R.id.item_area);
             TextView item_name = (TextView) convertView.findViewById(R.id.personal_style);
@@ -119,10 +136,10 @@ public class ListAdapter extends BaseAdapter {
                         PersonalActivity personalActivity = (PersonalActivity) activity;
                         Intent intent = new Intent(personalActivity, ben.practice.activity.PersonalPublicActivity.class);
                         intent.putExtra("style", item_names[position]);
-                        personalActivity.startActivityForResult(intent, 0x124);
                     }
                 });
             } else if (item_names[position].equals("昵称")) {
+                getNicknameFromServer(activity, item_text);
                 item_area.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -135,9 +152,39 @@ public class ListAdapter extends BaseAdapter {
 
             } else if (item_names[position].equals("账号信息")) {
                 personal_arrow_right.setVisibility(View.INVISIBLE);
+                item_text.setText( preferences.getString("phone", "defalut"));
             }
         }
         return convertView;
+    }
+
+    private void getNicknameFromServer(final Activity activity, final TextView textView) {
+        String url = NetUtil.URL + "/servlet/MainServer";
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                System.out.println(response);
+                textView.setText(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Util.setToast(activity, "服务器异常!");
+                Log.e("TAG", error.getMessage(), error);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //在这里设置需要post的参数
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("requestType", "nickname");
+                map.put("phone", preferences.getString("phone", "defalut"));
+                return map;
+            }
+        };
+        requestQueue.add(stringRequest);
+
     }
 
 

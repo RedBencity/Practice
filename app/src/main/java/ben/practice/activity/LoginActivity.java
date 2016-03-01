@@ -351,6 +351,7 @@ public class LoginActivity extends AppCompatActivity {
     private void startLogin() {
 
         if (isSuccess.equals("true")) {
+//        if (true) {
             getServerPhoto();
             Animation loAnimRotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
             Animation loAnimScale = AnimationUtils.loadAnimation(this, R.anim.login_photo_scale_small);
@@ -372,6 +373,7 @@ public class LoginActivity extends AppCompatActivity {
 //                    putExtra.put("photo", Util.convertBitmapToString(bm));
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     editor.putString("phone", login_edit_username.getText().toString());
+                    editor.putString("nickname","ben");
                     editor.commit();
                     finish();
                     startActivity(intent);
@@ -513,6 +515,7 @@ public class LoginActivity extends AppCompatActivity {
                     Util.setToast(LoginActivity.this, "您已注册过，直接登录！");
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     editor.putString("phone", phone);
+                    editor.putString("nickname","ben");
                     editor.commit();
                     finish();
                     startActivity(intent);
@@ -520,6 +523,7 @@ public class LoginActivity extends AppCompatActivity {
                     Util.setToast(LoginActivity.this, "注册成功！请尽快修改密码！");
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     editor.putString("phone", phone);
+                    editor.putString("nickname","ben");
                     editor.commit();
                     finish();
                     startActivity(intent);

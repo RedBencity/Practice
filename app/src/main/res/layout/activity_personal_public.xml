@@ -82,6 +82,7 @@
 
 
         <Button
+            android:id="@+id/personal_public_btn"
             style="@style/text_style_white_18sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
