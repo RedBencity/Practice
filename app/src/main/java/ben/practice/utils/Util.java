@@ -29,6 +29,7 @@ import ben.practice.R;
  */
 public class Util {
 
+    //关闭键盘
     public static void colseKeybord(EditText editText, Context context) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
@@ -99,6 +100,16 @@ public class Util {
         int height = view.getMeasuredHeight();
         int width = view.getMeasuredWidth();
         System.out.println("measure width=" + width + " height=" + height);
+    }
+
+    public static void println(Class c,Object string) {
+        String className = c.getName();
+        System.out.println(className+"------->"+ string);
+    }
+
+    public static void println(Object o,Object string) {
+        String className = o.getClass().getName();
+        System.out.println(className+"------->"+ string);
     }
 
     public static void println(Object string) {

@@ -42,6 +42,7 @@ public class Fragment3 extends Fragment {
     private String[] item_name;
     private ListView listView;
     private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
     private OnFragmentInteractionListener mListener;
     private String nickname;
     private ListAdapter listAdapter;
@@ -58,6 +59,7 @@ public class Fragment3 extends Fragment {
         icons = new int[]{R.mipmap.icon_default_avatar, R.mipmap.discovery_marked_question, R.mipmap.discovery_answer_count, R.mipmap.icon_misc_message,
                 R.mipmap.icon_misc_settings};
         preferences = getActivity().getSharedPreferences("constants", getActivity().MODE_PRIVATE);
+        editor = preferences.edit();
         item_name = new String[]{nickname, "错题、收藏", "做题统计", "我的消息", "设置"};
         listAdapter = new ListAdapter(getActivity(), icons, item_name);
 
@@ -104,9 +106,14 @@ public class Fragment3 extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                System.out.println(response);
+//               Util.println("Fragment3 "+response);
+                Util.println(this,response);
                 nickname = response;
+                editor.putString("nickname",nickname);
+                editor.commit();
                 listView.setAdapter(listAdapter);
+                item_name[0] = nickname;
+                listAdapter.notifyDataSetChanged();
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

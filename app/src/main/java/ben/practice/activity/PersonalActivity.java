@@ -220,6 +220,7 @@ public class PersonalActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Util.setToast(activity, "服务器异常!");
                 Log.e("TAG", error.getMessage(), error);
+                textView.setText(preferences.getString("nickname","default"));
             }
         }) {
             @Override
@@ -254,7 +255,7 @@ public class PersonalActivity extends AppCompatActivity {
         MultiPartStringRequest multiPartStringRequest = new MultiPartStringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
-                Util.println(s);
+                Util.println(PersonalActivity.this,s);
             }
         }, new Response.ErrorListener() {
             @Override
