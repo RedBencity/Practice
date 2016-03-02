@@ -33,6 +33,7 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -562,6 +563,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Bitmap response) {
                 login_img_photo.setImageBitmap(response);
+                try {
+                    BitmapUtil.saveFile(LoginActivity.this,response,login_edit_username.getText().toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }, 0, 0, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
             @Override

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +27,8 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.io.File;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,11 +92,13 @@ public class ListAdapter extends BaseAdapter {
                 imageView.setAdjustViewBounds(true);
                 imageView.setMaxHeight(Util.getViewHeight(imageView));
                 imageView.setMaxWidth(Util.getViewWidth(imageView));
-
-                if (Util.isFile(Util.getPhotoPath(activity, preferences.getString("phone", "default")))) {
-                    Bitmap bm = BitmapFactory.decodeFile(Util.getPhotoPath(activity, preferences.getString("phone", "default")));
+                 String path = Util.getPhotoPath(activity, preferences.getString("phone", "default"));
+                if (Util.isFile(path)) {
+                    Bitmap bm = BitmapFactory.decodeFile(path);
                     imageView.setImageBitmap(bm);
                     bm =null;
+//                    Uri imagepath = Uri.fromFile(new File(path));
+//                    imageView.setImageURI(imagepath);
                 } else {
 
                     getServerPhoto(activity, imageView);
@@ -124,9 +129,9 @@ public class ListAdapter extends BaseAdapter {
                 item_text.setBackgroundResource(R.mipmap.icon_default_avatar);
                 item_text.getLayoutParams().height = Util.getViewHeight(item_text);
                 item_text.getLayoutParams().width = Util.getViewWidth(item_text);
-                if (Util.isFile(Util.getPhotoPath(activity, preferences.getString("phone", "default")))) {
-
-                    Bitmap bm = BitmapFactory.decodeFile(Util.getPhotoPath(activity, preferences.getString("phone", "default")));
+                String path = Util.getPhotoPath(activity, preferences.getString("phone", "default"));
+                if (Util.isFile(path)) {
+                    Bitmap bm = BitmapFactory.decodeFile(path);
                     Drawable drawable = new  BitmapDrawable(bm);
                     item_text.setBackgroundDrawable(drawable);
                     bm =null;
