@@ -84,6 +84,10 @@ public class PersonalActivity extends AppCompatActivity {
         personal_login_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Util.isFile(Util.getPhotoPath(PersonalActivity.this, preferences.getString("phone", "default")))) {
+                    File file = new File(Util.getPhotoPath(PersonalActivity.this, preferences.getString("phone", "default")));
+                    file.delete();
+                }
                 editor.clear();
                 editor.commit();
                 Intent intent = new Intent(PersonalActivity.this,LoginActivity.class);
@@ -242,6 +246,9 @@ public class PersonalActivity extends AppCompatActivity {
         Bitmap bm = toRoundBitmap(bitmap);
         try {
            String path =  BitmapUtil.saveFile(this,bm,preferences.getString("phone","default"));
+            Util.println(PersonalActivity.this,path);
+            editor.putString("photoPath",path);
+            editor.commit();
             uploadPhoto(path);
         } catch (IOException e) {
             e.printStackTrace();
@@ -255,7 +262,7 @@ public class PersonalActivity extends AppCompatActivity {
         MultiPartStringRequest multiPartStringRequest = new MultiPartStringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
-                Util.println(PersonalActivity.this,s);
+//                Util.println(PersonalActivity.this,s);
             }
         }, new Response.ErrorListener() {
             @Override

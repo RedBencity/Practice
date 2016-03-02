@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -88,7 +89,17 @@ public class ListAdapter extends BaseAdapter {
                 imageView.setAdjustViewBounds(true);
                 imageView.setMaxHeight(Util.getViewHeight(imageView));
                 imageView.setMaxWidth(Util.getViewWidth(imageView));
-                getServerPhoto(activity, imageView);
+
+                if (Util.isFile(Util.getPhotoPath(activity, preferences.getString("phone", "default")))) {
+                    Bitmap bm = BitmapFactory.decodeFile(Util.getPhotoPath(activity, preferences.getString("phone", "default")));
+                    imageView.setImageBitmap(bm);
+                    bm =null;
+                } else {
+
+                    getServerPhoto(activity, imageView);
+
+                }
+//                getServerPhoto(activity, imageView);
             }
         } else if (activity instanceof RankActivity) {
             convertView = LayoutInflater.from(activity).inflate(R.layout.item_rank, null);
@@ -113,7 +124,17 @@ public class ListAdapter extends BaseAdapter {
                 item_text.setBackgroundResource(R.mipmap.icon_default_avatar);
                 item_text.getLayoutParams().height = Util.getViewHeight(item_text);
                 item_text.getLayoutParams().width = Util.getViewWidth(item_text);
-                getServerPhoto(activity, item_text);
+                if (Util.isFile(Util.getPhotoPath(activity, preferences.getString("phone", "default")))) {
+
+                    Bitmap bm = BitmapFactory.decodeFile(Util.getPhotoPath(activity, preferences.getString("phone", "default")));
+                    Drawable drawable = new  BitmapDrawable(bm);
+                    item_text.setBackgroundDrawable(drawable);
+                    bm =null;
+                } else {
+
+                    getServerPhoto(activity, item_text);
+
+                }
                 item_area.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -235,6 +256,7 @@ public class ListAdapter extends BaseAdapter {
             @Override
             public void onResponse(Bitmap response) {
                 imageView.setImageBitmap(response);
+
             }
         }, 0, 0, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
             @Override

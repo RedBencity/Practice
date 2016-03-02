@@ -173,5 +173,18 @@ public class Util {
         return (cachePath + File.separator + uniqueName);
     }
 
+    public static boolean isFile(String path){
+        File file=new File(path);
+        if(file.exists())
+        {
+            return true;
+        }
+            return false;
+    }
+    public static String getPhotoPath(Context context,String fileName){
+        String path =  Util.getDiskCacheDirName(context, "practice")+File.separator+ fileName+".png";
+        return path;
+    }
+
 
 }
