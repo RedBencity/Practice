@@ -443,12 +443,13 @@ public class LoginActivity extends AppCompatActivity {
 
     //检查用户密码
     private void checkUser() {
+        Util.println(LoginActivity.this, login_edit_username.getText().toString());
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         String url = NetUtil.URL + "/servlet/LoginServer";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                System.out.println(response);
+                Util.println(LoginActivity.this,response);
                 isSuccess = response;
                 startLogin();
             }
@@ -560,7 +561,7 @@ public class LoginActivity extends AppCompatActivity {
         ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
-                login_img_photo.setImageBitmap(BitmapUtil.getRoundedCornerBitmap(response));
+                login_img_photo.setImageBitmap(response);
             }
         }, 0, 0, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
             @Override

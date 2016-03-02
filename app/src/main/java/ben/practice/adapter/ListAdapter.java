@@ -3,6 +3,9 @@ package ben.practice.adapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +21,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -28,6 +32,7 @@ import ben.practice.MainActivity;
 import ben.practice.R;
 import ben.practice.activity.PersonalActivity;
 import ben.practice.activity.RankActivity;
+import ben.practice.utils.BitmapUtil;
 import ben.practice.utils.NetUtil;
 import ben.practice.utils.PhotoDialog;
 import ben.practice.utils.Util;
@@ -71,11 +76,20 @@ public class ListAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (activity instanceof MainActivity) {
+            preferences = activity.getSharedPreferences("constants", activity.MODE_PRIVATE);
             convertView = LayoutInflater.from(activity).inflate(R.layout.item_style, null);
             ImageView imageView = (ImageView) convertView.findViewById(R.id.icon);
             TextView textView = (TextView) convertView.findViewById(R.id.item_name);
             imageView.setImageResource(icons[position]);
+
             textView.setText(item_names[position]);
+            if (icons[position] == R.mipmap.icon_default_avatar) {
+//                Util.println(activity, Util.getViewHeight(imageView) + "  " + Util.getViewWidth(imageView));
+                imageView.setAdjustViewBounds(true);
+                imageView.setMaxHeight(Util.getViewHeight(imageView));
+                imageView.setMaxWidth(Util.getViewWidth(imageView));
+                getServerPhoto(activity, imageView);
+            }
         } else if (activity instanceof RankActivity) {
             convertView = LayoutInflater.from(activity).inflate(R.layout.item_rank, null);
             TextView rank_position = (TextView) convertView.findViewById(R.id.rank_position);
@@ -97,6 +111,9 @@ public class ListAdapter extends BaseAdapter {
             if (item_names[position].equals("头像")) {
                 item_text.setText("");
                 item_text.setBackgroundResource(R.mipmap.icon_default_avatar);
+                item_text.getLayoutParams().height = Util.getViewHeight(item_text);
+                item_text.getLayoutParams().width = Util.getViewWidth(item_text);
+                getServerPhoto(activity, item_text);
                 item_area.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -136,6 +153,7 @@ public class ListAdapter extends BaseAdapter {
                         PersonalActivity personalActivity = (PersonalActivity) activity;
                         Intent intent = new Intent(personalActivity, ben.practice.activity.PersonalPublicActivity.class);
                         intent.putExtra("style", item_names[position]);
+                        personalActivity.startActivity(intent);
                     }
                 });
             } else if (item_names[position].equals("昵称")) {
@@ -152,7 +170,7 @@ public class ListAdapter extends BaseAdapter {
 
             } else if (item_names[position].equals("账号信息")) {
                 personal_arrow_right.setVisibility(View.INVISIBLE);
-                item_text.setText( preferences.getString("phone", "defalut"));
+                item_text.setText(preferences.getString("phone", "defalut"));
             }
         }
         return convertView;
@@ -185,6 +203,47 @@ public class ListAdapter extends BaseAdapter {
         };
         requestQueue.add(stringRequest);
 
+    }
+
+    //获取服务器上头像
+    private void getServerPhoto(final Activity activity, final TextView textView) {
+        String url = NetUtil.URL + "/photo/" + preferences.getString("phone", "defalut") + ".png";
+        final RequestQueue requestQueue = Volley.newRequestQueue(activity);
+
+        ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                Drawable drawable = new BitmapDrawable(response);
+                textView.setBackgroundDrawable(drawable);
+            }
+        }, 0, 0, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Util.setToast(activity, "获取头像失败！");
+                textView.setBackgroundResource(R.mipmap.icon_default_avatar);
+            }
+        });
+        requestQueue.add(imageRequest);
+    }
+
+    //获取服务器上头像
+    private void getServerPhoto(final Activity activity, final ImageView imageView) {
+        String url = NetUtil.URL + "/photo/" + preferences.getString("phone", "defalut") + ".png";
+        final RequestQueue requestQueue = Volley.newRequestQueue(activity);
+
+        ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                imageView.setImageBitmap(response);
+            }
+        }, 0, 0, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Util.setToast(activity, "获取头像失败！");
+                imageView.setBackgroundResource(R.mipmap.icon_default_avatar);
+            }
+        });
+        requestQueue.add(imageRequest);
     }
 
 

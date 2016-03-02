@@ -1,9 +1,12 @@
 package ben.practice.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,7 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -62,9 +67,9 @@ public class Fragment3 extends Fragment {
         editor = preferences.edit();
         item_name = new String[]{nickname, "错题、收藏", "做题统计", "我的消息", "设置"};
         listAdapter = new ListAdapter(getActivity(), icons, item_name);
-
+        listView.setAdapter(listAdapter);
         getNicknameFromServer();
-
+//        getServerPhoto();
         return view;
     }
 
@@ -111,7 +116,7 @@ public class Fragment3 extends Fragment {
                 nickname = response;
                 editor.putString("nickname",nickname);
                 editor.commit();
-                listView.setAdapter(listAdapter);
+//                listView.setAdapter(listAdapter);
                 item_name[0] = nickname;
                 listAdapter.notifyDataSetChanged();
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -147,6 +152,7 @@ public class Fragment3 extends Fragment {
         requestQueue.add(stringRequest);
 
     }
+
 
 
 }
