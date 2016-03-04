@@ -1,12 +1,15 @@
 package ben.practice.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.Preference;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,10 +22,24 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.prefs.Preferences;
 
 import ben.practice.R;
+import ben.practice.entity.Question;
+import ben.practice.utils.NetUtil;
 import ben.practice.utils.RestDialog;
+import ben.practice.utils.Util;
+
 //做题
 public class QuestionActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -39,7 +56,13 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private int answers_requestCode = 0x123;
     private int question_position_resultCode = 0x123;
     private String point_name;
+    private String point_name_;
+    String subject;
+    private ArrayList<Question> questionArrayList;
 
+
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +76,8 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private void initView() {
         instance = this;
         setToolbar();
+        preferences = getSharedPreferences("constants", MODE_PRIVATE);
+        editor = preferences.edit();
         pageViews = new ArrayList<View>();
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
@@ -61,8 +86,12 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private void getData() {
         results = new int[questionCount];
         Intent intent = getIntent();
-        point_name=intent.getStringExtra("point_name");
-        setViewPager();
+        subject = intent.getStringExtra("subject");
+        point_name = intent.getStringExtra("point_name");
+        point_name_ = intent.getStringExtra("point_name_");
+        getQuestion();
+//        setViewPager();
+
 
     }
 
@@ -118,6 +147,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         bar_time.start();
         bar_time.setOnClickListener(new View.OnClickListener() {
             long pauseTime;
+
             @Override
             public void onClick(View v) {
                 bar_time.stop();
@@ -161,8 +191,8 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 View view = LayoutInflater.from(this).inflate(R.layout.viewpager_question_card, null);
                 TextView question_position = (TextView) view.findViewById(R.id.question_position);
                 TextView question_total = (TextView) view.findViewById(R.id.question_total);
-                TextView paractice_style = (TextView)view.findViewById(R.id.practice_style);
-                paractice_style.setText(point_name);
+                TextView paractice_style = (TextView) view.findViewById(R.id.practice_style);
+                paractice_style.setText(point_name_);
                 question_position.setText(i + 1 + "");
                 question_total.setText("/" + questionCount);
                 pageViews.add(view);
@@ -180,9 +210,9 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             case R.id.bar_answers:
                 if (currentPosition != questionCount) {
                     Intent intent = new Intent(QuestionActivity.this, AnswersActivity.class);
-                    intent.putExtra("results",results);
+                    intent.putExtra("results", results);
                     intent.putExtra("questionCount", questionCount);
-                    intent.putExtra("point_name",point_name);
+                    intent.putExtra("point_name", point_name);
                     startActivityForResult(intent, answers_requestCode);
                     overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
                 } else if (currentPosition == questionCount) {
@@ -205,10 +235,10 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     class QuestionAdapter extends PagerAdapter implements View.OnClickListener {
 
         private RelativeLayout option_a_area, option_b_area, option_c_area, option_d_area;
-        private TextView option_a, option_b, option_c, option_d;
+        private TextView question_title,option_a, option_b, option_c, option_d;
         private GridView answers_card;
         private TextView submit_result_btn;
-
+        private TextView option_a_content, option_b_content, option_c_content, option_d_content;
 
         @Override
         public int getCount() {
@@ -246,26 +276,39 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 option_b_area = (RelativeLayout) view.findViewById(R.id.option_b_area);
                 option_c_area = (RelativeLayout) view.findViewById(R.id.option_c_area);
                 option_d_area = (RelativeLayout) view.findViewById(R.id.option_d_area);
+                question_title = (TextView)view.findViewById(R.id.question_title);
                 option_a = (TextView) view.findViewById(R.id.option_a);
                 option_b = (TextView) view.findViewById(R.id.option_b);
                 option_c = (TextView) view.findViewById(R.id.option_c);
                 option_d = (TextView) view.findViewById(R.id.option_d);
+                option_a_content = (TextView) view.findViewById(R.id.option_a_content);
+                option_b_content = (TextView) view.findViewById(R.id.option_b_content);
+                option_c_content = (TextView) view.findViewById(R.id.option_c_content);
+                option_d_content = (TextView) view.findViewById(R.id.option_d_content);
                 option_a_area.setOnClickListener(this);
                 option_b_area.setOnClickListener(this);
                 option_c_area.setOnClickListener(this);
                 option_d_area.setOnClickListener(this);
+
+                question_title.setText(questionArrayList.get(position).getTitle());
+                option_a_content.setText(questionArrayList.get(position).getA());
+                option_b_content.setText(questionArrayList.get(position).getB());
+                option_c_content.setText(questionArrayList.get(position).getC());
+                option_d_content.setText(questionArrayList.get(position).getD());
+
+
             } else if (position == questionCount) {
                 answers_card = (GridView) view.findViewById(R.id.answers_card_gridview);
                 answers_card.setAdapter(new AnswersAdapter());
                 bar_scratch.setImageResource(R.mipmap.bar_scratch_disable);
                 bar_answers.setImageResource(R.mipmap.bar_answers_disable);
-                submit_result_btn = (TextView)view.findViewById(R.id.submit_result_btn);
+                submit_result_btn = (TextView) view.findViewById(R.id.submit_result_btn);
                 submit_result_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(QuestionActivity.this,ResultActivity.class);
-                        intent.putExtra("results",results);
-                        intent.putExtra("point_name",point_name);
+                        Intent intent = new Intent(QuestionActivity.this, ResultActivity.class);
+                        intent.putExtra("results", results);
+                        intent.putExtra("point_name", point_name);
                         startActivity(intent);
                         finish();
                     }
@@ -352,7 +395,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
 //            ImageView answers_position_bg = (ImageView) convertView.findViewById(R.id.answers_position_bg);
             TextView answers_position = (TextView) convertView.findViewById(R.id.answers_position);
             answers_position.setText((position + 1) + "");
-            if (results[position]!=0) {
+            if (results[position] != 0) {
                 answers_position.setBackgroundResource(R.mipmap.answer_btn_answered);
                 answers_position.setTextColor(getResources().getColor(R.color.white));
             }
@@ -364,6 +407,59 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             });
             return convertView;
         }
+    }
+
+    private void getQuestion() {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        String url = NetUtil.URL + "/servlet/QuestionServer";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+//                System.out.println(response);
+                questionArrayList = new ArrayList<Question>();
+                Question question;
+                String[] questions = response.split("@");
+                for (int i = 0; i < questions.length - 1; i++) {
+                    String[] list = questions[i].split("&");
+                    for (int j = 0; j < list.length; j++) {
+//                        System.out.println((j+1)+"------->"+list.length+"------>"+list[j]);
+                    }
+                    System.out.println();
+                    String title = list[0];
+                    String a = list[1];
+                    String b = list[2];
+                    String c = list[3];
+                    String d = list[4];
+                    String answer = list[5];
+                    String analyze = list[6];
+//                    System.out.println(title+" "+a+" "+b+" "+c+" "+d+" "+answer+" "+analyze);
+                    question = new Question(title, a, b, c, d, answer, analyze);
+                    questionArrayList.add(question);
+
+                    setViewPager();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Util.setToast(QuestionActivity.this, "服务器异常!");
+                Log.e("TAG", error.getMessage(), error);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //在这里设置需要post的参数
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("requestType", "getQuestion");
+                map.put("phone", preferences.getString("phone", "default"));
+                map.put("subject", subject);
+                map.put("point", point_name);
+                return map;
+            }
+        };
+        requestQueue.add(stringRequest);
     }
 
 

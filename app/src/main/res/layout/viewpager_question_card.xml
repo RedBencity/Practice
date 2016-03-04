@@ -63,6 +63,7 @@
         android:paddingTop="10dp">
 
         <TextView
+            android:id="@+id/question_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="下列各句中，没有语病的一句是( )"

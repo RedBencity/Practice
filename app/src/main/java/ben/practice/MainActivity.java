@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         two.setOnClickListener(this);
         three.setOnClickListener(this);
         fragmentManager = getSupportFragmentManager();
-        setChoiceItem(2);
+        setChoiceItem(0);
     }
 
 
