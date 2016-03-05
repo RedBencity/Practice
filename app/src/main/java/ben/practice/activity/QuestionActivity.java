@@ -58,7 +58,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private int answers_requestCode = 0x123;
     private int question_position_resultCode = 0x123;
     private String point_name;
-    private String point_name_chinese;
     String question_number;
     String subject;
     private ArrayList<Question> questionArrayList;
@@ -93,7 +92,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         Intent intent = getIntent();
         subject = intent.getStringExtra("subject");
         point_name = intent.getStringExtra("point_name");
-        point_name_chinese = intent.getStringExtra("point_name_chinese");
         getQuestion();
 //        setViewPager();
 
@@ -197,7 +195,8 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 TextView question_position = (TextView) view.findViewById(R.id.question_position);
                 TextView question_total = (TextView) view.findViewById(R.id.question_total);
                 TextView paractice_style = (TextView) view.findViewById(R.id.practice_style);
-                paractice_style.setText(point_name_chinese);
+//                paractice_style.setText(point_name_chinese);
+                paractice_style.setText(point_name);
                 question_position.setText(i + 1 + "");
                 question_total.setText("/" + questionCount);
                 pageViews.add(view);
@@ -227,12 +226,13 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                         }
                     }
                     Intent intent = new Intent(QuestionActivity.this, AnswersActivity.class);
+                    intent.putExtra("questionCount", questionCount);
                     intent.putExtra("results", results);
-                    intent.putExtra("right_results", right_results);
+                    intent.putExtra("right_results_from_question", right_results);
                     intent.putExtra("analyzes", analyazes);
                     intent.putExtra("question_number", question_number);
-                    intent.putExtra("questionCount", questionCount);
-                    intent.putExtra("point_name_chinese", point_name_chinese);
+                    intent.putExtra("subject", subject);
+                    intent.putExtra("point_name", point_name);
                     startActivityForResult(intent, answers_requestCode);
                     overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
                 } else if (currentPosition == questionCount) {
@@ -340,10 +340,11 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                         }
                         uploadQuestionNumber();
                         Intent intent = new Intent(QuestionActivity.this, ResultActivity.class);
+
                         intent.putExtra("results", results);
                         intent.putExtra("right_results", right_results);
                         intent.putExtra("analyzes", analyazes);
-                        intent.putExtra("point_name_chinese", point_name_chinese);
+                        intent.putExtra("point_name", point_name);
                         startActivity(intent);
                         finish();
                     }
@@ -376,6 +377,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     Map<String, String> map = new HashMap<String, String>();
                     map.put("requestType", "uploadQuestionNumber");
                     map.put("phone", preferences.getString("phone", "default"));
+                    map.put("subject", subject);
                     map.put("point", point_name);
                     map.put("questionNumber", question_number);
 

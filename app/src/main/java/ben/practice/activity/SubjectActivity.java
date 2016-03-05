@@ -38,7 +38,6 @@ public class SubjectActivity extends AppCompatActivity {
     private ListView practice_point_list;
     private List<PracticePointInfo> practicePointInfos;
     private String[] point;
-    private String[] pinyin;
     private String subject;
 
     @Override
@@ -77,7 +76,6 @@ public class SubjectActivity extends AppCompatActivity {
         practicePointInfos = new ArrayList<PracticePointInfo>();
         if (subject.equals("英语")) {
             point = new String[]{"副词", "介词", "时态","形容词"};
-            pinyin = new String[]{"fuci","jieci","shitai","xingrongci"};
         } else if (subject.equals("语文")) {
             point = new String[]{"副词", "介词"};
         }else if (subject.equals("数学")) {
@@ -135,8 +133,7 @@ public class SubjectActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(SubjectActivity.this, QuestionActivity.class);
                     intent.putExtra("subject",subject);
-                    intent.putExtra("point_name",pinyin[position]);
-                    intent.putExtra("point_name_chinese",practicePointInfoss.get(position).getName());
+                    intent.putExtra("point_name",practicePointInfoss.get(position).getName());
                     startActivity(intent);
                 }
             });

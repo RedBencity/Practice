@@ -13,6 +13,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import ben.practice.R;
+import ben.practice.utils.Util;
 
 public class ResultActivity extends AppCompatActivity {
 
@@ -51,10 +52,10 @@ public class ResultActivity extends AppCompatActivity {
         results = intent.getIntArrayExtra("results");
         right_results = intent.getIntArrayExtra("right_results");
         analyazes = intent.getStringArrayExtra("analyzes");
-        point_name = intent.getStringExtra("point_name_chinese");
+        point_name = intent.getStringExtra("point_name");
         practice_style.setText("练习类型："+point_name);
         cut_off_time.setText("交卷时间："+getTime());
-
+        Util.println(ResultActivity.this,results.length);
         for (int i=0;i<results.length;i++){
             if(results[i]== right_results[i]){
                 rightCount++;

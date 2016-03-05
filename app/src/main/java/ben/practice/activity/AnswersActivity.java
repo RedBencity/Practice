@@ -1,10 +1,12 @@
 package ben.practice.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,19 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import ben.practice.R;
+import ben.practice.utils.NetUtil;
+import ben.practice.utils.Util;
 
 //答题卡
 public class AnswersActivity extends AppCompatActivity {
@@ -24,8 +38,13 @@ public class AnswersActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView submit_result_btn;
     private int[] results;
+    private int[] right_results_from_question;
+    private int[] right_results_from_analaze;
+    private String[] analyazes;
+    private String question_number;
+    private String subject;
     private String point_name;
-    private int[] right_results;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,32 +58,76 @@ public class AnswersActivity extends AppCompatActivity {
         answers_gridview = (GridView) findViewById(R.id.answers_gridview);
         setToolbar();
         submit_result_btn = (TextView) findViewById(R.id.submit_result_btn);
+        preferences = getSharedPreferences("constants", MODE_PRIVATE);
     }
 
     private void getData() {
         final Intent intent = getIntent();
         results = intent.getIntArrayExtra("results");
+        subject = intent.getStringExtra("subject");
         point_name = intent.getStringExtra("point_name");
-        if (intent.getIntArrayExtra("right_results") != null) {
-            right_results = intent.getIntArrayExtra("right_results");
-            System.out.println(right_results);
-        }
+        right_results_from_question = intent.getIntArrayExtra("right_results_from_question");
+        analyazes = intent.getStringArrayExtra("analyzes");
+        question_number = intent.getStringExtra("question_number");
+
+
+
         setGridView();
         submit_result_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                uploadQuestionNumber();
                 Intent intent1 = new Intent(AnswersActivity.this, ResultActivity.class);
                 intent1.putExtra("results", results);
+                Util.println(AnswersActivity.this,results.length);
+                intent1.putExtra("right_results", right_results_from_question);
+                intent1.putExtra("analyzes", analyazes);
                 intent1.putExtra("point_name", point_name);
                 QuestionActivity.instance.finish();
                 startActivity(intent1);
                 finish();
             }
         });
-        if (right_results!=null){
+        if (right_results_from_analaze!=null){
             submit_result_btn.setVisibility(View.INVISIBLE);
         }
     }
+
+
+
+    private void uploadQuestionNumber() {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String url = NetUtil.URL + "/servlet/QuestionServer";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+//                    System.out.println(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Util.setToast(AnswersActivity.this, "服务器异常!");
+                Log.e("TAG", error.getMessage(), error);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //在这里设置需要post的参数
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("requestType", "uploadQuestionNumber");
+                map.put("phone", preferences.getString("phone", "default"));
+                map.put("subject", subject);
+                map.put("point", point_name);
+                map.put("questionNumber", question_number);
+
+                return map;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
+
 
     private void setToolbar() {
         View view = findViewById(R.id.answers_toolbar);
@@ -114,12 +177,12 @@ public class AnswersActivity extends AppCompatActivity {
                 answers_position.setTextColor(getResources().getColor(R.color.white));
             }
 
-            if (right_results != null) {
+            if (right_results_from_analaze != null) {
 
-                if (results[position] == right_results[position]) {
+                if (results[position] == right_results_from_analaze[position]) {
                     answers_position.setTextColor(getResources().getColor(R.color.white));
                     answers_position.setBackgroundResource(R.mipmap.answer_btn_right);
-                } else if (results[position] != right_results[position] && results[position] != 0) {
+                } else if (results[position] != right_results_from_analaze[position] && results[position] != 0) {
                     answers_position.setTextColor(getResources().getColor(R.color.white));
                     answers_position.setBackgroundResource(R.mipmap.answer_btn_wrong);
                 }
