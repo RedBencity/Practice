@@ -53,10 +53,13 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     public static QuestionActivity instance = null;
     private int questionCount = 10;
     private int[] results;
+    private int[] right_results;
+    private String[] analyazes;
     private int answers_requestCode = 0x123;
     private int question_position_resultCode = 0x123;
     private String point_name;
-    private String point_name_;
+    private String point_name_chinese;
+    String question_number;
     String subject;
     private ArrayList<Question> questionArrayList;
 
@@ -84,11 +87,13 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void getData() {
-        results = new int[questionCount];
+//        results = new int[questionCount];
+//        right_results = new int[questionCount];
+//        analyazes = new String[questionCount];
         Intent intent = getIntent();
         subject = intent.getStringExtra("subject");
         point_name = intent.getStringExtra("point_name");
-        point_name_ = intent.getStringExtra("point_name_");
+        point_name_chinese = intent.getStringExtra("point_name_chinese");
         getQuestion();
 //        setViewPager();
 
@@ -192,7 +197,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 TextView question_position = (TextView) view.findViewById(R.id.question_position);
                 TextView question_total = (TextView) view.findViewById(R.id.question_total);
                 TextView paractice_style = (TextView) view.findViewById(R.id.practice_style);
-                paractice_style.setText(point_name_);
+                paractice_style.setText(point_name_chinese);
                 question_position.setText(i + 1 + "");
                 question_total.setText("/" + questionCount);
                 pageViews.add(view);
@@ -209,10 +214,25 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.bar_answers:
                 if (currentPosition != questionCount) {
+                    for (int i = 0; i < questionArrayList.size(); i++) {
+                        analyazes[i] = questionArrayList.get(i).getAnalyze();
+                        if (questionArrayList.get(i).getAnswer().equals("A")) {
+                            right_results[i] = 1;
+                        } else if (questionArrayList.get(i).getAnswer().equals("B")) {
+                            right_results[i] = 2;
+                        } else if (questionArrayList.get(i).getAnswer().equals("C")) {
+                            right_results[i] = 3;
+                        } else if (questionArrayList.get(i).getAnswer().equals("D")) {
+                            right_results[i] = 4;
+                        }
+                    }
                     Intent intent = new Intent(QuestionActivity.this, AnswersActivity.class);
                     intent.putExtra("results", results);
+                    intent.putExtra("right_results", right_results);
+                    intent.putExtra("analyzes", analyazes);
+                    intent.putExtra("question_number", question_number);
                     intent.putExtra("questionCount", questionCount);
-                    intent.putExtra("point_name", point_name);
+                    intent.putExtra("point_name_chinese", point_name_chinese);
                     startActivityForResult(intent, answers_requestCode);
                     overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
                 } else if (currentPosition == questionCount) {
@@ -235,7 +255,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     class QuestionAdapter extends PagerAdapter implements View.OnClickListener {
 
         private RelativeLayout option_a_area, option_b_area, option_c_area, option_d_area;
-        private TextView question_title,option_a, option_b, option_c, option_d;
+        private TextView question_title, option_a, option_b, option_c, option_d;
         private GridView answers_card;
         private TextView submit_result_btn;
         private TextView option_a_content, option_b_content, option_c_content, option_d_content;
@@ -276,7 +296,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 option_b_area = (RelativeLayout) view.findViewById(R.id.option_b_area);
                 option_c_area = (RelativeLayout) view.findViewById(R.id.option_c_area);
                 option_d_area = (RelativeLayout) view.findViewById(R.id.option_d_area);
-                question_title = (TextView)view.findViewById(R.id.question_title);
+                question_title = (TextView) view.findViewById(R.id.question_title);
                 option_a = (TextView) view.findViewById(R.id.option_a);
                 option_b = (TextView) view.findViewById(R.id.option_b);
                 option_c = (TextView) view.findViewById(R.id.option_c);
@@ -306,9 +326,24 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 submit_result_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        for (int i = 0; i < questionArrayList.size(); i++) {
+                            analyazes[i] = questionArrayList.get(i).getAnalyze();
+                            if (questionArrayList.get(i).getAnswer().equals("A")) {
+                                right_results[i] = 1;
+                            } else if (questionArrayList.get(i).getAnswer().equals("B")) {
+                                right_results[i] = 2;
+                            } else if (questionArrayList.get(i).getAnswer().equals("C")) {
+                                right_results[i] = 3;
+                            } else if (questionArrayList.get(i).getAnswer().equals("D")) {
+                                right_results[i] = 4;
+                            }
+                        }
+                        uploadQuestionNumber();
                         Intent intent = new Intent(QuestionActivity.this, ResultActivity.class);
                         intent.putExtra("results", results);
-                        intent.putExtra("point_name", point_name);
+                        intent.putExtra("right_results", right_results);
+                        intent.putExtra("analyzes", analyazes);
+                        intent.putExtra("point_name_chinese", point_name_chinese);
                         startActivity(intent);
                         finish();
                     }
@@ -317,6 +352,39 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
 
             }
         }
+
+        private void uploadQuestionNumber() {
+            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+            String url = NetUtil.URL + "/servlet/QuestionServer";
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+//                    System.out.println(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                    Util.setToast(QuestionActivity.this, "服务器异常!");
+                    Log.e("TAG", error.getMessage(), error);
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    //在这里设置需要post的参数
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("requestType", "uploadQuestionNumber");
+                    map.put("phone", preferences.getString("phone", "default"));
+                    map.put("point", point_name);
+                    map.put("questionNumber", question_number);
+
+                    return map;
+                }
+            };
+            requestQueue.add(stringRequest);
+        }
+
 
         @Override
         public void onClick(View v) {
@@ -417,26 +485,39 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onResponse(String response) {
 //                System.out.println(response);
-                questionArrayList = new ArrayList<Question>();
-                Question question;
-                String[] questions = response.split("@");
-                for (int i = 0; i < questions.length - 1; i++) {
-                    String[] list = questions[i].split("&");
-                    for (int j = 0; j < list.length; j++) {
-//                        System.out.println((j+1)+"------->"+list.length+"------>"+list[j]);
-                    }
-                    System.out.println();
-                    String title = list[0];
-                    String a = list[1];
-                    String b = list[2];
-                    String c = list[3];
-                    String d = list[4];
-                    String answer = list[5];
-                    String analyze = list[6];
-//                    System.out.println(title+" "+a+" "+b+" "+c+" "+d+" "+answer+" "+analyze);
-                    question = new Question(title, a, b, c, d, answer, analyze);
-                    questionArrayList.add(question);
 
+                if(response.equals("no_file")){
+                    QuestionActivity.this.finish();
+                    Util.setToast(QuestionActivity.this, "暂时没有题目！");
+                }else if (response.equals("all_do")){
+                    QuestionActivity.this.finish();
+                    Util.setToast(QuestionActivity.this, "您已做完该题型所有题目！");
+                }else{
+                    questionArrayList = new ArrayList<Question>();
+                    Question question;
+                    String[] questions = response.split("@");
+                    for (int i = 0; i < questions.length - 1; i++) {
+                        String[] list = questions[i].split("&");
+                        for (int j = 0; j < list.length; j++) {
+//                        System.out.println((j+1)+"------->"+list.length+"------>"+list[j]);
+                        }
+                        System.out.println();
+                        String title = list[0];
+                        String a = list[1];
+                        String b = list[2];
+                        String c = list[3];
+                        String d = list[4];
+                        String answer = list[5];
+                        String analyze = list[6];
+//                    System.out.println(title+" "+a+" "+b+" "+c+" "+d+" "+answer+" "+analyze);
+                        question = new Question(title, a, b, c, d, answer, analyze);
+                        questionArrayList.add(question);
+                    }
+                    question_number = questions[questions.length - 1];
+                    questionCount = questionArrayList.size();
+                    results = new int[questionCount];
+                    right_results = new int[questionCount];
+                    analyazes = new String[questionCount];
                     setViewPager();
                 }
             }

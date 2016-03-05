@@ -20,6 +20,7 @@ public class ResultActivity extends AppCompatActivity {
     private TextView head_title;
     private int[] results;
     private  int[] right_results;
+    private String[] analyazes;
     private GridView result_gridview;
     private TextView practice_style;
     private TextView cut_off_time;
@@ -43,13 +44,14 @@ public class ResultActivity extends AppCompatActivity {
         cut_off_time = (TextView)findViewById(R.id.cut_off_time);
         right_count = (TextView)findViewById(R.id.right_count);
         total_count = (TextView)findViewById(R.id.total_count);
-        right_results = new int[]{1,2,3,4,1,2,3,4,1,2};
     }
 
     private void getData(){
         Intent intent = getIntent();
         results = intent.getIntArrayExtra("results");
-        point_name = intent.getStringExtra("point_name");
+        right_results = intent.getIntArrayExtra("right_results");
+        analyazes = intent.getStringArrayExtra("analyzes");
+        point_name = intent.getStringExtra("point_name_chinese");
         practice_style.setText("练习类型："+point_name);
         cut_off_time.setText("交卷时间："+getTime());
 

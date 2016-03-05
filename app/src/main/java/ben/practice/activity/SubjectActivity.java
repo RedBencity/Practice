@@ -136,7 +136,7 @@ public class SubjectActivity extends AppCompatActivity {
                     Intent intent = new Intent(SubjectActivity.this, QuestionActivity.class);
                     intent.putExtra("subject",subject);
                     intent.putExtra("point_name",pinyin[position]);
-                    intent.putExtra("point_name_",practicePointInfoss.get(position).getName());
+                    intent.putExtra("point_name_chinese",practicePointInfoss.get(position).getName());
                     startActivity(intent);
                 }
             });

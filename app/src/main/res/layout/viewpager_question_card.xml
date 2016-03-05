@@ -64,15 +64,16 @@
 
         <TextView
             android:id="@+id/question_title"
+            style="@style/text_style_15sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="下列各句中，没有语病的一句是( )"
-            style="@style/text_style_15sp" />
+            android:text=" " />
 
         <RelativeLayout
             android:id="@+id/option_a_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:layout_marginTop="20dp">
 
             <TextView
@@ -83,21 +84,25 @@
                 android:background="@mipmap/option_btn_single_normal"
                 android:gravity="center"
                 android:text="A" />
+
             <TextView
                 android:id="@+id/option_a_content"
+                style="@style/text_style_15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/option_a"
-                style="@style/text_style_15sp"
-                android:text="玛格丽特事事争一流，不只在学业上出类拔萃，她的体育、音乐、演讲等也是学生中的佼佼者。"/>
+                android:text=" " />
+
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/option_b_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/option_b"
@@ -107,20 +112,24 @@
                 android:background="@mipmap/option_btn_single_normal"
                 android:gravity="center"
                 android:text="B" />
+
             <TextView
                 android:id="@+id/option_b_content"
+                style="@style/text_style_15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/option_b"
-                style="@style/text_style_15sp"
-                android:text="据报道，美国每年的慈善资金能占到GDP的2.4%，有近80%来自国民。其中，最富有的美国人中20％所捐赠的钱，占了全部慈善款的2/3。"/>
+                android:layout_centerVertical="true"
+                android:text=" " />
         </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/option_c_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/option_c"
@@ -130,20 +139,24 @@
                 android:background="@mipmap/option_btn_single_normal"
                 android:gravity="center"
                 android:text="C" />
+
             <TextView
                 android:id="@+id/option_c_content"
+                style="@style/text_style_15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/option_c"
-                style="@style/text_style_15sp"
-                android:text="残奥会如同一堂生动的教育课，不仅让我们的心灵受到震撼，人性得以升华，更让我们对残疾人事业增添了一份深刻的理解和强烈的责任感。"/>
+                android:layout_centerVertical="true"
+                android:text=" " />
         </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/option_d_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/option_d"
@@ -153,14 +166,16 @@
                 android:background="@mipmap/option_btn_single_normal"
                 android:gravity="center"
                 android:text="D" />
+
             <TextView
                 android:id="@+id/option_d_content"
+                style="@style/text_style_15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/option_d"
-                style="@style/text_style_15sp"
-                android:text="“授人以鱼，不如授人以渔”，这是能否解决贫困问题的基本方式。当然，这种经济发展必须是良性的、可持续的发展。"/>
+                android:layout_centerVertical="true"
+                android:text=" " />
         </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>
