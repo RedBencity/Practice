@@ -13,11 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 import ben.practice.R;
+import ben.practice.entity.Question;
 
 public class AnalyzeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -33,6 +37,9 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
     private String point_name;
     private int position;
     private int[] right_results;
+    private String[] analyzes;
+    private ArrayList<Question> questionArrayList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +54,29 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
         pageViews = new ArrayList<View>();
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
+
     }
 
     private void getData() {
         Intent intent = getIntent();
-        point_name = intent.getStringExtra("point_name");
         position = intent.getIntExtra("position", 0);
         results = intent.getIntArrayExtra("results");
-        right_results = intent.getIntArrayExtra("right_results");
+        questionArrayList = intent.getParcelableArrayListExtra("questionArrayList");
+        point_name = questionArrayList.get(0).getPoint();
+        analyzes = new String[questionArrayList.size()];
+        right_results = new int[questionArrayList.size()];
+        for (int i = 0; i < questionArrayList.size(); i++) {
+            analyzes[i] = questionArrayList.get(i).getAnalyze();
+            if (questionArrayList.get(i).getAnswer().equals("A")) {
+                right_results[i] = 1;
+            } else if (questionArrayList.get(i).getAnswer().equals("B")) {
+                right_results[i] = 2;
+            } else if (questionArrayList.get(i).getAnswer().equals("C")) {
+                right_results[i] = 3;
+            } else if (questionArrayList.get(i).getAnswer().equals("D")) {
+                right_results[i] = 4;
+            }
+        }
         setViewPager();
         viewPager.setCurrentItem(position);
 
@@ -121,8 +143,8 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
                 pageViews.add(view);
             } else if (i == results.length) {
                 View view = LayoutInflater.from(this).inflate(R.layout.viewpager_analyze_return, null);
-                Button analyze_return_analyze_btn = (Button)view.findViewById(R.id.analyze_return_analyze_btn);
-                Button analyze_return_subject_btn = (Button)view.findViewById(R.id.analyze_return_subject_btn);
+                Button analyze_return_analyze_btn = (Button) view.findViewById(R.id.analyze_return_analyze_btn);
+                Button analyze_return_subject_btn = (Button) view.findViewById(R.id.analyze_return_subject_btn);
                 analyze_return_analyze_btn.setOnClickListener(this);
                 analyze_return_subject_btn.setOnClickListener(this);
 
@@ -140,7 +162,7 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
                     Intent intent = new Intent(AnalyzeActivity.this, AnswersActivity.class);
                     intent.putExtra("results", results);
                     intent.putExtra("point_name", point_name);
-                    intent.putExtra("right_results",right_results);
+                    intent.putParcelableArrayListExtra("questionArrayList_from_analyze",questionArrayList);
                     startActivityForResult(intent, answers_requestCode);
                     overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
                 } else if (currentPosition == results.length) {
@@ -159,8 +181,10 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.analyze_return_subject_btn:
-                Intent intent = new Intent(AnalyzeActivity.this,SubjectActivity.class);
+                Intent intent = new Intent(AnalyzeActivity.this, SubjectActivity.class);
+                intent.putExtra("subject_name",questionArrayList.get(0).getSubject());
                 startActivity(intent);
+                finish();
                 break;
 
         }
@@ -170,7 +194,11 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
 
     class QuestionAdapter extends PagerAdapter {
 
-        private TextView option_a, option_b, option_c, option_d;
+        private TextView question_title, option_a, option_b, option_c, option_d;
+
+        private LinearLayout analyze_area;
+        private TextView analyze_text;
+        private TextView option_a_content, option_b_content, option_c_content, option_d_content;
 
 
         @Override
@@ -205,10 +233,24 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
             if (position != results.length) {
                 bar_scratch.setImageResource(R.drawable.selector_bar_scratch);
                 bar_answers.setImageResource(R.drawable.selector_bar_answers);
+                question_title = (TextView) view.findViewById(R.id.question_title);
                 option_a = (TextView) view.findViewById(R.id.option_a);
                 option_b = (TextView) view.findViewById(R.id.option_b);
                 option_c = (TextView) view.findViewById(R.id.option_c);
                 option_d = (TextView) view.findViewById(R.id.option_d);
+                analyze_area = (LinearLayout) view.findViewById(R.id.analyze_area);
+                analyze_text = (TextView) view.findViewById(R.id.analyze_text);
+                analyze_area.setVisibility(View.VISIBLE);
+                option_a_content = (TextView) view.findViewById(R.id.option_a_content);
+                option_b_content = (TextView) view.findViewById(R.id.option_b_content);
+                option_c_content = (TextView) view.findViewById(R.id.option_c_content);
+                option_d_content = (TextView) view.findViewById(R.id.option_d_content);
+                question_title.setText(questionArrayList.get(position).getTitle());
+                option_a_content.setText(questionArrayList.get(position).getA());
+                option_b_content.setText(questionArrayList.get(position).getB());
+                option_c_content.setText(questionArrayList.get(position).getC());
+                option_d_content.setText(questionArrayList.get(position).getD());
+
                 switch (right_results[position]) {
                     case 1:
                         option_a.setTextColor(getResources().getColor(R.color.white));
@@ -250,6 +292,7 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
                             break;
                     }
                 }
+                analyze_text.setText(analyzes[position]);
 
             } else if (position == results.length) {
 

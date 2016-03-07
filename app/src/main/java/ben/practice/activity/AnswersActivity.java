@@ -5,15 +5,12 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.transition.Slide;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -23,10 +20,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import ben.practice.R;
+import ben.practice.entity.Question;
 import ben.practice.utils.NetUtil;
 import ben.practice.utils.Util;
 
@@ -39,11 +38,13 @@ public class AnswersActivity extends AppCompatActivity {
     private TextView submit_result_btn;
     private int[] results;
     private int[] right_results_from_question;
-    private int[] right_results_from_analaze;
+    private int[] right_results_from_analyze;
     private String[] analyazes;
     private String question_number;
     private String subject;
     private String point_name;
+    private ArrayList<Question> questionArrayList_from_question;
+    private ArrayList<Question> questionArrayList_from_analyze;
     private SharedPreferences preferences;
 
     @Override
@@ -64,11 +65,13 @@ public class AnswersActivity extends AppCompatActivity {
     private void getData() {
         final Intent intent = getIntent();
         results = intent.getIntArrayExtra("results");
-        subject = intent.getStringExtra("subject");
-        point_name = intent.getStringExtra("point_name");
-        right_results_from_question = intent.getIntArrayExtra("right_results_from_question");
-        analyazes = intent.getStringArrayExtra("analyzes");
         question_number = intent.getStringExtra("question_number");
+        questionArrayList_from_question = intent.getParcelableArrayListExtra("questionArrayList_from_question");
+        questionArrayList_from_analyze = intent.getParcelableArrayListExtra("questionArrayList_from_analyze");
+        if (questionArrayList_from_question!=null) {
+            subject = questionArrayList_from_question.get(0).getSubject();
+            point_name = questionArrayList_from_question.get(0).getPoint();
+        }
 
 
 
@@ -77,19 +80,31 @@ public class AnswersActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 uploadQuestionNumber();
-                Intent intent1 = new Intent(AnswersActivity.this, ResultActivity.class);
-                intent1.putExtra("results", results);
+                Intent toResultIntent = new Intent(AnswersActivity.this, ResultActivity.class);
+                toResultIntent.putExtra("results", results);
                 Util.println(AnswersActivity.this,results.length);
-                intent1.putExtra("right_results", right_results_from_question);
-                intent1.putExtra("analyzes", analyazes);
-                intent1.putExtra("point_name", point_name);
+                toResultIntent.putParcelableArrayListExtra("questionArrayList",questionArrayList_from_question);
                 QuestionActivity.instance.finish();
-                startActivity(intent1);
+                startActivity(toResultIntent);
                 finish();
             }
         });
-        if (right_results_from_analaze!=null){
+        if (questionArrayList_from_analyze !=null){
+            subject = questionArrayList_from_analyze.get(0).getSubject();
+            point_name = questionArrayList_from_analyze.get(0).getPoint();
+            right_results_from_analyze = new int[questionArrayList_from_analyze.size()];
             submit_result_btn.setVisibility(View.INVISIBLE);
+            for (int i = 0; i < questionArrayList_from_analyze.size(); i++) {
+                if (questionArrayList_from_analyze.get(i).getAnswer().equals("A")) {
+                    right_results_from_analyze[i] = 1;
+                } else if (questionArrayList_from_analyze.get(i).getAnswer().equals("B")) {
+                    right_results_from_analyze[i] = 2;
+                } else if (questionArrayList_from_analyze.get(i).getAnswer().equals("C")) {
+                    right_results_from_analyze[i] = 3;
+                } else if (questionArrayList_from_analyze.get(i).getAnswer().equals("D")) {
+                    right_results_from_analyze[i] = 4;
+                }
+            }
         }
     }
 
@@ -177,12 +192,12 @@ public class AnswersActivity extends AppCompatActivity {
                 answers_position.setTextColor(getResources().getColor(R.color.white));
             }
 
-            if (right_results_from_analaze != null) {
+            if (right_results_from_analyze != null) {
 
-                if (results[position] == right_results_from_analaze[position]) {
+                if (results[position] == right_results_from_analyze[position]) {
                     answers_position.setTextColor(getResources().getColor(R.color.white));
                     answers_position.setBackgroundResource(R.mipmap.answer_btn_right);
-                } else if (results[position] != right_results_from_analaze[position] && results[position] != 0) {
+                } else if (results[position] != right_results_from_analyze[position] && results[position] != 0) {
                     answers_position.setTextColor(getResources().getColor(R.color.white));
                     answers_position.setBackgroundResource(R.mipmap.answer_btn_wrong);
                 }

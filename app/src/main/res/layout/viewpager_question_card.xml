@@ -12,6 +12,7 @@
         android:paddingTop="10dp">
 
         <LinearLayout
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -53,6 +54,7 @@
         android:background="@color/gray1" />
 
     <LinearLayout
+        android:id="@+id/option_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/question_line"
@@ -73,8 +75,8 @@
             android:id="@+id/option_a_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/option_a"
@@ -90,8 +92,8 @@
                 style="@style/text_style_15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/option_a"
                 android:text=" " />
 
@@ -118,9 +120,9 @@
                 style="@style/text_style_15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/option_b"
-                android:layout_centerVertical="true"
                 android:text=" " />
         </RelativeLayout>
 
@@ -145,9 +147,9 @@
                 style="@style/text_style_15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/option_c"
-                android:layout_centerVertical="true"
                 android:text=" " />
         </RelativeLayout>
 
@@ -172,10 +174,41 @@
                 style="@style/text_style_15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/option_d"
-                android:layout_centerVertical="true"
                 android:text=" " />
         </RelativeLayout>
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/analyze_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/option_area"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="10dp"
+            android:background="@color/gray1" />
+
+        <TextView
+            style="@style/text_style_gray2_15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="解析" />
+        <TextView
+            android:id="@+id/analyze_text"
+            style="@style/text_style_gray2_15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="" />
+    </LinearLayout>
+
+
 </RelativeLayout>

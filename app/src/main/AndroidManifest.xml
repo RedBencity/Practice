@@ -23,7 +23,8 @@
         <activity android:name=".MainActivity">
 
         </activity>
-        <activity android:name=".activity.SubjectActivity" />
+        <activity android:name=".activity.SubjectActivity"
+            android:launchMode="singleTask"/>
         <activity android:name=".activity.QuestionActivity" />
         <activity android:name=".activity.AnswersActivity" />
         <activity
@@ -42,10 +43,8 @@
             android:label="@string/title_activity_public"
             android:theme="@style/AppTheme" />
         <activity android:name=".activity.LoginActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

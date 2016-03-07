@@ -12,7 +12,10 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import ben.practice.R;
+import ben.practice.entity.Question;
 import ben.practice.utils.Util;
 
 public class ResultActivity extends AppCompatActivity {
@@ -21,13 +24,13 @@ public class ResultActivity extends AppCompatActivity {
     private TextView head_title;
     private int[] results;
     private  int[] right_results;
-    private String[] analyazes;
     private GridView result_gridview;
     private TextView practice_style;
     private TextView cut_off_time;
     private TextView right_count;
     private TextView total_count;
     private String point_name;
+    private ArrayList<Question> questionArrayList;
     private int rightCount =0;
 
     @Override
@@ -50,9 +53,20 @@ public class ResultActivity extends AppCompatActivity {
     private void getData(){
         Intent intent = getIntent();
         results = intent.getIntArrayExtra("results");
-        right_results = intent.getIntArrayExtra("right_results");
-        analyazes = intent.getStringArrayExtra("analyzes");
-        point_name = intent.getStringExtra("point_name");
+        questionArrayList = intent.getParcelableArrayListExtra("questionArrayList");
+        right_results =new int[questionArrayList.size()];
+        point_name = questionArrayList.get(0).getPoint();
+        for (int i = 0; i < questionArrayList.size(); i++) {
+            if (questionArrayList.get(i).getAnswer().equals("A")) {
+                right_results[i] = 1;
+            } else if (questionArrayList.get(i).getAnswer().equals("B")) {
+                right_results[i] = 2;
+            } else if (questionArrayList.get(i).getAnswer().equals("C")) {
+                right_results[i] = 3;
+            } else if (questionArrayList.get(i).getAnswer().equals("D")) {
+                right_results[i] = 4;
+            }
+        }
         practice_style.setText("练习类型："+point_name);
         cut_off_time.setText("交卷时间："+getTime());
         Util.println(ResultActivity.this,results.length);
@@ -89,8 +103,9 @@ public class ResultActivity extends AppCompatActivity {
         int month = time.month+1;
         int day = time.monthDay;
         int hour = time.hour;
+        int minute = time.minute;
         int second = time.second;
-        return year+"."+month+"."+day+"   "+hour+"."+second;
+        return year+"."+month+"."+day+"   "+hour+":"+minute+":"+second;
     }
 
 
@@ -136,11 +151,9 @@ public class ResultActivity extends AppCompatActivity {
                @Override
                public void onClick(View v) {
                    Intent intent = new Intent(ResultActivity.this,AnalyzeActivity.class);
-                   intent.putExtra("analyze","analyze");
-                   intent.putExtra("point_name",point_name);
                    intent.putExtra("position",position);
-                   intent.putExtra("right_results",right_results);
                    intent.putExtra("results",results);
+                   intent.putParcelableArrayListExtra("questionArrayList",questionArrayList);
                    startActivity(intent);
                }
            });

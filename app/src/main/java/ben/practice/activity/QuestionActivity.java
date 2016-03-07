@@ -2,6 +2,7 @@ package ben.practice.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.Preference;
@@ -53,8 +54,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     public static QuestionActivity instance = null;
     private int questionCount = 10;
     private int[] results;
-    private int[] right_results;
-    private String[] analyazes;
     private int answers_requestCode = 0x123;
     private int question_position_resultCode = 0x123;
     private String point_name;
@@ -86,14 +85,14 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void getData() {
-//        results = new int[questionCount];
-//        right_results = new int[questionCount];
-//        analyazes = new String[questionCount];
         Intent intent = getIntent();
-        subject = intent.getStringExtra("subject");
-        point_name = intent.getStringExtra("point_name");
-        getQuestion();
-//        setViewPager();
+        questionArrayList = intent.getParcelableArrayListExtra("questionArrayList");
+        subject = questionArrayList.get(0).getSubject();
+        point_name = questionArrayList.get(0).getPoint();
+        question_number = intent.getStringExtra("question_number");
+        questionCount = questionArrayList.size();
+        results = new int[questionCount];
+        setViewPager();
 
 
     }
@@ -143,10 +142,16 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void setBarTime() {
+        //高版本计时器前面自动有零
+        final boolean mIsKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
         bar_time_bg = (ImageView) findViewById(R.id.bar_time_bg);
         bar_time = (Chronometer) findViewById(R.id.bar_time);
         bar_time.setBase(SystemClock.elapsedRealtime());
-        bar_time.setFormat("0%s");
+        if (mIsKitKat) {
+            bar_time.setFormat("%s");
+        } else {
+            bar_time.setFormat("0%s");
+        }
         bar_time.start();
         bar_time.setOnClickListener(new View.OnClickListener() {
             long pauseTime;
@@ -172,7 +177,8 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         bar_time.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
             public void onChronometerTick(Chronometer chronometer) {
-                if (SystemClock.elapsedRealtime() - bar_time.getBase() < 1000 * 599) {
+                //前10分钟补零
+                if (SystemClock.elapsedRealtime() - bar_time.getBase() < 1000 * 599&&!mIsKitKat) {
                     bar_time.setFormat("0%s");
                 } else {
                     bar_time.setFormat("%s");
@@ -195,7 +201,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 TextView question_position = (TextView) view.findViewById(R.id.question_position);
                 TextView question_total = (TextView) view.findViewById(R.id.question_total);
                 TextView paractice_style = (TextView) view.findViewById(R.id.practice_style);
-//                paractice_style.setText(point_name_chinese);
                 paractice_style.setText(point_name);
                 question_position.setText(i + 1 + "");
                 question_total.setText("/" + questionCount);
@@ -213,26 +218,10 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.bar_answers:
                 if (currentPosition != questionCount) {
-                    for (int i = 0; i < questionArrayList.size(); i++) {
-                        analyazes[i] = questionArrayList.get(i).getAnalyze();
-                        if (questionArrayList.get(i).getAnswer().equals("A")) {
-                            right_results[i] = 1;
-                        } else if (questionArrayList.get(i).getAnswer().equals("B")) {
-                            right_results[i] = 2;
-                        } else if (questionArrayList.get(i).getAnswer().equals("C")) {
-                            right_results[i] = 3;
-                        } else if (questionArrayList.get(i).getAnswer().equals("D")) {
-                            right_results[i] = 4;
-                        }
-                    }
                     Intent intent = new Intent(QuestionActivity.this, AnswersActivity.class);
-                    intent.putExtra("questionCount", questionCount);
                     intent.putExtra("results", results);
-                    intent.putExtra("right_results_from_question", right_results);
-                    intent.putExtra("analyzes", analyazes);
                     intent.putExtra("question_number", question_number);
-                    intent.putExtra("subject", subject);
-                    intent.putExtra("point_name", point_name);
+                    intent.putParcelableArrayListExtra("questionArrayList_from_question", questionArrayList);
                     startActivityForResult(intent, answers_requestCode);
                     overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
                 } else if (currentPosition == questionCount) {
@@ -326,25 +315,10 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 submit_result_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        for (int i = 0; i < questionArrayList.size(); i++) {
-                            analyazes[i] = questionArrayList.get(i).getAnalyze();
-                            if (questionArrayList.get(i).getAnswer().equals("A")) {
-                                right_results[i] = 1;
-                            } else if (questionArrayList.get(i).getAnswer().equals("B")) {
-                                right_results[i] = 2;
-                            } else if (questionArrayList.get(i).getAnswer().equals("C")) {
-                                right_results[i] = 3;
-                            } else if (questionArrayList.get(i).getAnswer().equals("D")) {
-                                right_results[i] = 4;
-                            }
-                        }
                         uploadQuestionNumber();
                         Intent intent = new Intent(QuestionActivity.this, ResultActivity.class);
-
                         intent.putExtra("results", results);
-                        intent.putExtra("right_results", right_results);
-                        intent.putExtra("analyzes", analyazes);
-                        intent.putExtra("point_name", point_name);
+                        intent.putParcelableArrayListExtra("questionArrayList", questionArrayList);
                         startActivity(intent);
                         finish();
                     }
@@ -395,7 +369,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     clearChoice();
                     option_a.setTextColor(getResources().getColor(R.color.white));
                     option_a.setBackgroundResource(R.mipmap.option_btn_single_checked);
-//                    isAnswers[currentPosition] = true;
                     results[currentPosition] = 1;
                     viewPager.setCurrentItem(currentPosition + 1);
                     break;
@@ -403,7 +376,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     clearChoice();
                     option_b.setTextColor(getResources().getColor(R.color.white));
                     option_b.setBackgroundResource(R.mipmap.option_btn_single_checked);
-//                    isAnswers[currentPosition] = true;
                     results[currentPosition] = 2;
                     viewPager.setCurrentItem(currentPosition + 1);
 
@@ -412,7 +384,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     clearChoice();
                     option_c.setTextColor(getResources().getColor(R.color.white));
                     option_c.setBackgroundResource(R.mipmap.option_btn_single_checked);
-//                    isAnswers[currentPosition] = true;
                     results[currentPosition] = 3;
                     viewPager.setCurrentItem(currentPosition + 1);
 
@@ -421,7 +392,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     clearChoice();
                     option_d.setTextColor(getResources().getColor(R.color.white));
                     option_d.setBackgroundResource(R.mipmap.option_btn_single_checked);
-//                    isAnswers[currentPosition] = true;
                     results[currentPosition] = 4;
                     viewPager.setCurrentItem(currentPosition + 1);
 
@@ -478,72 +448,4 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             return convertView;
         }
     }
-
-    private void getQuestion() {
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        String url = NetUtil.URL + "/servlet/QuestionServer";
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-//                System.out.println(response);
-
-                if(response.equals("no_file")){
-                    QuestionActivity.this.finish();
-                    Util.setToast(QuestionActivity.this, "暂时没有题目！");
-                }else if (response.equals("all_do")){
-                    QuestionActivity.this.finish();
-                    Util.setToast(QuestionActivity.this, "您已做完该题型所有题目！");
-                }else{
-                    questionArrayList = new ArrayList<Question>();
-                    Question question;
-                    String[] questions = response.split("@");
-                    for (int i = 0; i < questions.length - 1; i++) {
-                        String[] list = questions[i].split("&");
-                        for (int j = 0; j < list.length; j++) {
-//                        System.out.println((j+1)+"------->"+list.length+"------>"+list[j]);
-                        }
-                        System.out.println();
-                        String title = list[0];
-                        String a = list[1];
-                        String b = list[2];
-                        String c = list[3];
-                        String d = list[4];
-                        String answer = list[5];
-                        String analyze = list[6];
-//                    System.out.println(title+" "+a+" "+b+" "+c+" "+d+" "+answer+" "+analyze);
-                        question = new Question(title, a, b, c, d, answer, analyze);
-                        questionArrayList.add(question);
-                    }
-                    question_number = questions[questions.length - 1];
-                    questionCount = questionArrayList.size();
-                    results = new int[questionCount];
-                    right_results = new int[questionCount];
-                    analyazes = new String[questionCount];
-                    setViewPager();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Util.setToast(QuestionActivity.this, "服务器异常!");
-                Log.e("TAG", error.getMessage(), error);
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //在这里设置需要post的参数
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("requestType", "getQuestion");
-                map.put("phone", preferences.getString("phone", "default"));
-                map.put("subject", subject);
-                map.put("point", point_name);
-                return map;
-            }
-        };
-        requestQueue.add(stringRequest);
-    }
-
-
 }
