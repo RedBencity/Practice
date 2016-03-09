@@ -2,6 +2,9 @@ package ben.practice.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -21,10 +24,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import ben.practice.R;
 import ben.practice.entity.PracticePointInfo;
@@ -44,18 +50,53 @@ public class SubjectActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private ArrayList<Question> questionArrayList;
     private String question_number;
+    private TextView question_count;
+    private TextView accuracy_count;
+    private int right_count;
+    private int total_count;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subject);
         initView();
-        System.out.print("");
+        getData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getCountCondition();
     }
 
     private void initView() {
         setToolbar();
+
+
+    }
+
+    private void getData() {
+        question_count = (TextView) findViewById(R.id.question_count);
+        accuracy_count = (TextView) findViewById(R.id.accuracy_count);
+
         setListAdapter();
+
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message message) {
+                if (message.what == 0x123) {
+                    int num = message.getData().getInt("num");
+                    question_count.setText(num + "");
+                } else if (message.what == 0x124) {
+                    double accuracy = message.getData().getDouble("accuracy");
+                    DecimalFormat df = new DecimalFormat("0.0");
+                    accuracy_count.setText(df.format(accuracy) + "");
+                }
+                Util.println(SubjectActivity.this, "aaaaaaaaaaaaaaaaaaa");
+
+            }
+        };
 
     }
 
@@ -136,7 +177,7 @@ public class SubjectActivity extends AppCompatActivity {
                 public void onClick(View v) {
 
                     Intent intent = new Intent(SubjectActivity.this, QuestionActivity.class);
-                    getQuestion(subject,practicePointInfoss.get(position).getName(),intent);
+                    getQuestion(subject, practicePointInfoss.get(position).getName(), intent);
                 }
             });
             return convertView;
@@ -148,8 +189,8 @@ public class SubjectActivity extends AppCompatActivity {
         public ImageView point_begin_btn;
     }
 
-    private void getQuestion(final String subject,final String point_name,final Intent intent) {
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+    private void getQuestion(final String subject, final String point_name, final Intent intent) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
         String url = NetUtil.URL + "/servlet/QuestionServer";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -184,7 +225,7 @@ public class SubjectActivity extends AppCompatActivity {
                     }
                     question_number = questions[questions.length - 1];
                     intent.putExtra("question_number", question_number);
-                    intent.putParcelableArrayListExtra("questionArrayList",questionArrayList);
+                    intent.putParcelableArrayListExtra("questionArrayList", questionArrayList);
                     startActivity(intent);
                 }
             }
@@ -210,5 +251,82 @@ public class SubjectActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    private void getCountCondition() {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String url = NetUtil.URL + "/servlet/QuestionServer";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+//                Util.println(SubjectActivity.this, response);
+                String[] strs = response.split("@");
+                right_count = Integer.parseInt(strs[0]);
+                total_count = Integer.parseInt(strs[1]);
+
+                new Thread() {
+                    @Override
+                    public void run() {
+                        for (int i = 1; i <= total_count; i++) {
+                            Message message = new Message();
+                            message.what = 0x123;
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("num", i);
+                            message.setData(bundle);
+                            try {
+                                sleep(50);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            handler.sendMessage(message);
+                        }
+                    }
+                }.start();
+                new Thread() {
+                    @Override
+                    public void run() {
+                        double a = right_count * 1.0 / total_count;
+                        double b = a / 100;
+                        double c = 0;
+                        for (int i = 1; i <= 100; i++) {
+                            if(total_count==0){
+                                break;
+                            }
+                            Message message = new Message();
+                            message.what = 0x124;
+                            Bundle bundle = new Bundle();
+                            c = c + b;
+                            bundle.putDouble("accuracy", c*100);
+                            message.setData(bundle);
+                            try {
+                                sleep(50);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            handler.sendMessage(message);
+                        }
+                    }
+                }.start();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Util.setToast(SubjectActivity.this, "服务器异常!");
+                Log.e("TAG", error.getMessage(), error);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //在这里设置需要post的参数
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("requestType", "getCountCondition");
+                map.put("phone", preferences.getString("phone", "default"));
+                map.put("subject",subject);
+                return map;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
 
 }

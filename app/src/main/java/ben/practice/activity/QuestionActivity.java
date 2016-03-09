@@ -63,7 +63,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
 
 
     private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +77,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         instance = this;
         setToolbar();
         preferences = getSharedPreferences("constants", MODE_PRIVATE);
-        editor = preferences.edit();
         pageViews = new ArrayList<View>();
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 

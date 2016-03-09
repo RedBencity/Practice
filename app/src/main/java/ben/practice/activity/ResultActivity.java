@@ -1,10 +1,12 @@
 package ben.practice.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +14,20 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import ben.practice.R;
 import ben.practice.entity.Question;
+import ben.practice.utils.NetUtil;
 import ben.practice.utils.Util;
 
 public class ResultActivity extends AppCompatActivity {
@@ -32,6 +44,7 @@ public class ResultActivity extends AppCompatActivity {
     private String point_name;
     private ArrayList<Question> questionArrayList;
     private int rightCount =0;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +61,7 @@ public class ResultActivity extends AppCompatActivity {
         cut_off_time = (TextView)findViewById(R.id.cut_off_time);
         right_count = (TextView)findViewById(R.id.right_count);
         total_count = (TextView)findViewById(R.id.total_count);
+        preferences = getSharedPreferences("constants", MODE_PRIVATE);
     }
 
     private void getData(){
@@ -78,6 +92,7 @@ public class ResultActivity extends AppCompatActivity {
         right_count.setText(rightCount+"");
         total_count.setText("道/"+results.length+"道");
         setGridView();
+        uploadQuestionCondition();
 
     }
 
@@ -160,5 +175,36 @@ public class ResultActivity extends AppCompatActivity {
 
             return convertView;
         }
+    }
+
+    private void uploadQuestionCondition(){
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        String url = NetUtil.URL + "/servlet/QuestionServer";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+//                    System.out.println(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Util.setToast(ResultActivity.this, "服务器异常!");
+                Log.e("TAG", error.getMessage(), error);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //在这里设置需要post的参数
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("requestType", "uploadQuestionCondition");
+                map.put("phone", preferences.getString("phone", "default"));
+                map.put("subject",questionArrayList.get(0).getSubject());
+                map.put("rightCount",String.valueOf(rightCount));
+                map.put("totalCount",String.valueOf(questionArrayList.size()));
+                return map;
+            }
+        };
+        requestQueue.add(stringRequest);
     }
 }
