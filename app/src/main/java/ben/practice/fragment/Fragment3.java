@@ -32,6 +32,7 @@ import java.util.Map;
 
 import ben.practice.MainActivity;
 import ben.practice.R;
+import ben.practice.activity.CollectActivity;
 import ben.practice.activity.PersonalActivity;
 import ben.practice.activity.RankActivity;
 import ben.practice.adapter.ListAdapter;
@@ -65,11 +66,10 @@ public class Fragment3 extends Fragment {
                 R.mipmap.icon_misc_settings};
         preferences = getActivity().getSharedPreferences("constants", getActivity().MODE_PRIVATE);
         editor = preferences.edit();
-        item_name = new String[]{nickname, "错题、收藏", "做题统计", "我的消息", "设置"};
+        item_name = new String[]{nickname, "收藏", "做题统计", "我的消息", "设置"};
         listAdapter = new ListAdapter(getActivity(), icons, item_name);
         listView.setAdapter(listAdapter);
         getNicknameFromServer();
-//        getServerPhoto();
         return view;
     }
 
@@ -127,7 +127,8 @@ public class Fragment3 extends Fragment {
                             intent = new Intent(getActivity(), PersonalActivity.class);
                             startActivity(intent);
                         } else if (position == 1) {
-                            Util.println("1");
+                            intent = new Intent(getActivity(), CollectActivity.class);
+                            startActivity(intent);
                         }
                     }
                 });

@@ -15,6 +15,9 @@ public class Question implements Parcelable {
     private String subject;
     private String point;
 
+    public Question(){
+
+    }
     public Question(String title, String a, String b, String c, String d, String answer, String analyze,String subject,String point) {
         this.title = title;
         this.a = a;

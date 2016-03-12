@@ -58,6 +58,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private int question_position_resultCode = 0x123;
     private String point_name;
     String question_number;
+    String[] question_numbers;
     String subject;
     private ArrayList<Question> questionArrayList;
 
@@ -88,6 +89,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         subject = questionArrayList.get(0).getSubject();
         point_name = questionArrayList.get(0).getPoint();
         question_number = intent.getStringExtra("question_number");
+        question_numbers = question_number.split("#");
         questionCount = questionArrayList.size();
         results = new int[questionCount];
         setViewPager();
@@ -122,13 +124,44 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
 
                 switch (item.getItemId()) {
                     case R.id.collect_item:
-                        break;
-                    case R.id.share_item:
+                        uploadCollectQuestion();
                         break;
                 }
                 return true;
             }
         });
+    }
+
+    private void uploadCollectQuestion(){
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        String url = NetUtil.URL + "/servlet/QuestionServer";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+//                    System.out.println(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Util.setToast(QuestionActivity.this, "服务器异常!");
+                Log.e("TAG", error.getMessage(), error);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //在这里设置需要post的参数
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("requestType", "uploadCollectQuestion");
+                map.put("phone", preferences.getString("phone", "default"));
+                map.put("subject", subject);
+                map.put("point", point_name);
+                map.put("questionNumber", question_numbers[viewPager.getCurrentItem()]);
+                return map;
+            }
+        };
+        requestQueue.add(stringRequest);
     }
 
     @Override
@@ -176,7 +209,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onChronometerTick(Chronometer chronometer) {
                 //前10分钟补零
-                if (SystemClock.elapsedRealtime() - bar_time.getBase() < 1000 * 599&&!mIsKitKat) {
+                if (SystemClock.elapsedRealtime() - bar_time.getBase() < 1000 * 599 && !mIsKitKat) {
                     bar_time.setFormat("0%s");
                 } else {
                     bar_time.setFormat("%s");
@@ -191,6 +224,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
 
     private void setViewPager() {
         for (int i = 0; i < questionCount + 1; i++) {
@@ -302,6 +336,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 option_b_content.setText(questionArrayList.get(position).getB());
                 option_c_content.setText(questionArrayList.get(position).getC());
                 option_d_content.setText(questionArrayList.get(position).getD());
+
 
 
             } else if (position == questionCount) {

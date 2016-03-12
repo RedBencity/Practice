@@ -20,11 +20,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-
-        </activity>
-        <activity android:name=".activity.SubjectActivity"
-            android:launchMode="singleTask"/>
+        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".activity.SubjectActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".activity.QuestionActivity" />
         <activity android:name=".activity.AnswersActivity" />
         <activity
@@ -45,15 +44,17 @@
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.mob.tools.MobUIShell"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".activity.CollectActivity" />
+        <activity android:name=".activity.MarkActivity"></activity>
     </application>
 
 </manifest>

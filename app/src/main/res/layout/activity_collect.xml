@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="ben.practice.activity.CollectActivity">
+    <include
+        android:id="@+id/collect_toolbar"
+        layout="@layout/layout_toolbar" />
+
+    <ListView
+        android:id="@+id/collect_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/collect_toolbar"
+        android:layout_marginTop="10dp"
+        android:divider="@color/white1"
+        android:dividerHeight="1dp"
+        tools:listitem="@layout/item_collect_subject" />
+</RelativeLayout>

@@ -108,8 +108,6 @@ public class AnalyzeActivity extends AppCompatActivity implements View.OnClickLi
                 switch (item.getItemId()) {
                     case R.id.collect_item:
                         break;
-                    case R.id.share_item:
-                        break;
                 }
                 return true;
             }

@@ -85,7 +85,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="答题卡"
+            android:text="答题卡(点击题目查看解析)"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             style="@style/text_style_blank_15sp"

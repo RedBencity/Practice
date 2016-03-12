@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+    <LinearLayout
+        android:id="@+id/option_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/question_title"
+            style="@style/text_style_15sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=" " />
+
+        <RelativeLayout
+            android:id="@+id/option_a_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/option_a"
+                style="@style/text_style_colorprimary_18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/option_btn_single_normal"
+                android:gravity="center"
+                android:text="A" />
+
+            <TextView
+                android:id="@+id/option_a_content"
+                style="@style/text_style_15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/option_a"
+                android:text=" " />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/option_b_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/option_b"
+                style="@style/text_style_colorprimary_18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/option_btn_single_normal"
+                android:gravity="center"
+                android:text="B" />
+
+            <TextView
+                android:id="@+id/option_b_content"
+                style="@style/text_style_15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/option_b"
+                android:text=" " />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/option_c_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/option_c"
+                style="@style/text_style_colorprimary_18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/option_btn_single_normal"
+                android:gravity="center"
+                android:text="C" />
+
+            <TextView
+                android:id="@+id/option_c_content"
+                style="@style/text_style_15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/option_c"
+                android:text=" " />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/option_d_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/option_d"
+                style="@style/text_style_colorprimary_18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/option_btn_single_normal"
+                android:gravity="center"
+                android:text="D" />
+
+            <TextView
+                android:id="@+id/option_d_content"
+                style="@style/text_style_15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/option_d"
+                android:text=" " />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/analyze_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/option_area"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="10dp"
+            android:background="@color/gray1" />
+
+        <TextView
+            style="@style/text_style_gray2_15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="解析" />
+        <TextView
+            android:id="@+id/analyze_text"
+            style="@style/text_style_gray2_15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="" />
+    </LinearLayout>
+
+
+</RelativeLayout>

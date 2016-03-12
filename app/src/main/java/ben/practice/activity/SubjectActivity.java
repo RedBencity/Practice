@@ -93,8 +93,6 @@ public class SubjectActivity extends AppCompatActivity {
                     DecimalFormat df = new DecimalFormat("0.0");
                     accuracy_count.setText(df.format(accuracy) + "");
                 }
-                Util.println(SubjectActivity.this, "aaaaaaaaaaaaaaaaaaa");
-
             }
         };
 
