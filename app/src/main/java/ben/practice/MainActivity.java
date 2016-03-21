@@ -2,6 +2,7 @@ package ben.practice;
 
 import android.app.Fragment;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import ben.practice.Service.MessageService;
 import ben.practice.fragment.Fragment1;
 import ben.practice.fragment.Fragment2;
 import ben.practice.fragment.Fragment3;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Fragment1 fragment1;
     private Fragment2 fragment2;
     private Fragment3 fragment3;
+    private Intent serviceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initView();
         getData();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(serviceIntent);
+
     }
 
     private void initView() {
@@ -54,6 +64,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         three.setOnClickListener(this);
         fragmentManager = getSupportFragmentManager();
         setChoiceItem(0);
+        serviceIntent = new Intent(MainActivity.this, MessageService.class);
+
+        startService(serviceIntent);
     }
 
 

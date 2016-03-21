@@ -1,12 +1,8 @@
 package ben.practice.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,21 +18,18 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import ben.practice.MainActivity;
 import ben.practice.R;
 import ben.practice.activity.CollectActivity;
+import ben.practice.activity.MessageActivity;
 import ben.practice.activity.PersonalActivity;
-import ben.practice.activity.RankActivity;
 import ben.practice.adapter.ListAdapter;
 import ben.practice.listener.OnFragmentInteractionListener;
-import ben.practice.utils.BitmapUtil;
 import ben.practice.utils.NetUtil;
 import ben.practice.utils.Util;
 
@@ -112,9 +104,9 @@ public class Fragment3 extends Fragment {
             @Override
             public void onResponse(String response) {
 //               Util.println("Fragment3 "+response);
-                Util.println(this,response);
+                Util.println(this, response);
                 nickname = response;
-                editor.putString("nickname",nickname);
+                editor.putString("nickname", nickname);
                 editor.commit();
 //                listView.setAdapter(listAdapter);
                 item_name[0] = nickname;
@@ -122,13 +114,21 @@ public class Fragment3 extends Fragment {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        TextView textView = (TextView) view.findViewById(R.id.item_name);
                         Intent intent;
                         if (position == 0) {
                             intent = new Intent(getActivity(), PersonalActivity.class);
                             startActivity(intent);
-                        } else if (position == 1) {
+                        } else if ((textView.getText().equals("收藏"))) {
                             intent = new Intent(getActivity(), CollectActivity.class);
                             startActivity(intent);
+                        } else if (textView.getText().equals("做题统计")) {
+                            Util.setToast(getActivity(), "aaaaaa");
+                        } else if ((textView.getText().equals("我的消息"))) {
+                            intent = new Intent(getActivity(), MessageActivity.class);
+                            startActivity(intent);
+                        } else if ((textView.getText().equals("设置"))) {
+                            Util.setToast(getActivity(), "bbbbbbbbbbbbbbbbbbb");
                         }
                     }
                 });
@@ -153,7 +153,6 @@ public class Fragment3 extends Fragment {
         requestQueue.add(stringRequest);
 
     }
-
 
 
 }

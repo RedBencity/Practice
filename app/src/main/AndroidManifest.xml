@@ -54,7 +54,13 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".activity.CollectActivity" />
-        <activity android:name=".activity.MarkActivity"></activity>
+        <activity android:name=".activity.MarkActivity" />
+        <activity android:name=".activity.MessageActivity" />
+
+        <service
+            android:name=".Service.MessageService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

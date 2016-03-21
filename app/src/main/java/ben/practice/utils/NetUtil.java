@@ -4,11 +4,13 @@ package ben.practice.utils;
  * Created by dell on 2015-10-1.
  */
 public class NetUtil {
+//    final  static public String IP = "10.219.1.175";
+final  static public String IP = "172.27.35.1";
     //模拟器访问
-//    final  static public String URL = "http://192.168.1.100:8080/PracticeServer";
-    final  static public String URL = "http://192.168.56.1:8080/PracticeServer";
+//    final  static public String URL = "http://10.219.1.175:8080/PracticeServer";
+//    final  static public String URL = "http://192.168.56.1:8080/PracticeServer";
     //手机访问
-    final  static public String URL_PHONE = "http://192.168.155.1:8080/PracticeServer";
+    final  static public String URL = "http://"+IP+":8080/PracticeServer";
 
 
     public static String getPhotoUrl(String username){
