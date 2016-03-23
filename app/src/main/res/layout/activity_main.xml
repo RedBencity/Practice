@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_above="@+id/navigation_bar"
-        android:background="@color/gray" />
+        android:background="@color/white1" />
 
     <LinearLayout
         android:id="@+id/navigation_bar"

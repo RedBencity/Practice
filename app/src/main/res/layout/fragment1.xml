@@ -14,8 +14,7 @@
         <android.support.v4.view.ViewPager
             android:id="@+id/head_message"
             android:layout_width="wrap_content"
-            android:layout_height="180dp"
-            android:background="#4545ea" />
+            android:layout_height="180dp"/>
 
         <LinearLayout
             android:id="@+id/small_dots"

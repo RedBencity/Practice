@@ -28,6 +28,7 @@ import ben.practice.R;
 import ben.practice.activity.CollectActivity;
 import ben.practice.activity.MessageActivity;
 import ben.practice.activity.PersonalActivity;
+import ben.practice.activity.SettingsActivity;
 import ben.practice.adapter.ListAdapter;
 import ben.practice.listener.OnFragmentInteractionListener;
 import ben.practice.utils.NetUtil;
@@ -128,7 +129,8 @@ public class Fragment3 extends Fragment {
                             intent = new Intent(getActivity(), MessageActivity.class);
                             startActivity(intent);
                         } else if ((textView.getText().equals("设置"))) {
-                            Util.setToast(getActivity(), "bbbbbbbbbbbbbbbbbbb");
+                            intent = new Intent(getActivity(), SettingsActivity.class);
+                            startActivity(intent);
                         }
                     }
                 });

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+    <FrameLayout
+        android:id="@+id/frame_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/date_bg" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/month"
+                style="@style/text_style_white_15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Mar" />
+
+            <TextView
+                android:id="@+id/day"
+                style="@style/text_style_white_15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="23" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/wisdom"
+        style="@style/text_style_white_15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/frame_date"
+        tools:text="少壮不努力，老大徒伤悲！" />
+</RelativeLayout>

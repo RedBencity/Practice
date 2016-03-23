@@ -18,7 +18,11 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import ben.practice.R;
 import ben.practice.activity.SubjectActivity;
@@ -36,7 +40,8 @@ public class Fragment1 extends Fragment {
     private ViewGroup smallDots_area;
     private ImageView smallDot;
     private int pageCount = 3;
-    private int direction =0;
+    private int direction = 0;
+
     public Fragment1() {
         // Required empty public constructor
     }
@@ -56,9 +61,22 @@ public class Fragment1 extends Fragment {
 
     private void setViewPager() {
         for (int i = 0; i < pageCount; i++) {
-            View view = LayoutInflater.from(getActivity()).inflate(R.layout.viewpager_head_message, null);
-            TextView textView = (TextView) view.findViewById(R.id.aaa);
-            textView.setText(i + 1 + "");
+            View view = null;
+            if (i == 0) {
+                view = LayoutInflater.from(getActivity()).inflate(R.layout.viewpager_head_message1, null);
+                DateFormat df = new SimpleDateFormat("MMM-dd", Locale.ENGLISH);
+                String[] date = df.format(new Date()).split("-");
+                TextView month = (TextView) view.findViewById(R.id.month);
+                TextView day = (TextView) view.findViewById(R.id.day);
+                TextView wisdom = (TextView) view.findViewById(R.id.wisdom);
+                month.setText(date[0]);
+                day.setText(date[1]);
+                wisdom.setText("少壮不努力，老大徒伤悲！");
+            } else if (i == 1) {
+                view = LayoutInflater.from(getActivity()).inflate(R.layout.viewpager_head_message2, null);
+            } else if (i == 2) {
+                view = LayoutInflater.from(getActivity()).inflate(R.layout.viewpager_head_message3, null);
+            }
             pageViews.add(view);
         }
         smallDots = new ImageView[pageViews.size()];
@@ -74,13 +92,15 @@ public class Fragment1 extends Fragment {
                 smallDots[i].setBackgroundResource(R.mipmap.page_indicator_focused);
             }
             ImageView margin = new ImageView(getActivity());
-            margin.setLayoutParams(new ViewGroup.LayoutParams(20,20));
+            margin.setLayoutParams(new ViewGroup.LayoutParams(20, 20));
             smallDots_area.addView(smallDots[i]);
             smallDots_area.addView(margin);
         }
+
         viewPager.setAdapter(new QuestionAdapter());
         viewPager.setOnPageChangeListener(new GuidePageChangeListener());
-        viewPager.setCurrentItem(pageCount*10);
+        viewPager.setCurrentItem(pageCount * 10);
+        viewPager.setOffscreenPageLimit(0);
     }
 
 
@@ -150,7 +170,7 @@ public class Fragment1 extends Fragment {
                 public void onClick(View v) {
                     Log.i("image", subject_name[position]);
                     Intent intent = new Intent(getActivity(), SubjectActivity.class);
-                    intent.putExtra("subject_name",subject_name[position]);
+                    intent.putExtra("subject_name", subject_name[position]);
                     startActivity(intent);
 
                 }
@@ -174,34 +194,63 @@ public class Fragment1 extends Fragment {
     class QuestionAdapter extends PagerAdapter {
         @Override
         public int getCount() {
-            return 200;
+            if (pageCount == 2) {
+                return pageViews.size();
+            } else if (pageCount >= 3) {
+                return 200;
+            } else {
+                return 1;
+            }
         }
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
+//            Log.i("isViewFromObject", (view == object)+" ");
             return view == object;
+//            return true;
         }
 
+
+        //向右先destroy后instant，向左先instant后destroy
         //滑动切换的时候销毁当前的组件
         @Override
         public void destroyItem(ViewGroup container, int position,
                                 Object object) {
-//            Log.i("destroyItem", position + 1 + "");
-           // ((ViewPager) container).removeView(pageViews.get(position % pageViews.size()));
+            Log.i("destroyItem", position + 1 + "");
+            if (pageCount == 2) {
+                ((ViewPager) container).removeView(pageViews.get(position % pageViews.size()));
+            }
+
         }
 
+        ArrayList<View> check = new ArrayList<View>();
+
         //每次滑动的时候生成的组件
+        //自己维护item，确保左右滑动不会出BUG
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-//            Log.i("instantiateItem", position + 1 + "");
-//            ((ViewPager) container).addView(pageViews.get((position % pageViews.size())));
-            ViewGroup parent = (ViewGroup) pageViews.get((position % pageViews.size())).getParent();
-            if (parent != null ) {
-                parent.removeAllViews();
+            Log.i("instantiateItem", position + 1 + "");
+            if (pageCount == 3) {
+                if (direction == 1) {
+                    check.remove(pageViews.get((position + 3) % pageViews.size()));
+                    ((ViewPager) container).removeView(pageViews.get((position + 3) % pageViews.size()));
+                }
+                if (direction == 2) {
+                    check.remove(pageViews.get((position - 3) % pageViews.size()));
+                    ((ViewPager) container).removeView(pageViews.get((position - 3) % pageViews.size()));
+                }
+                if (!check.contains(pageViews.get(position % pageViews.size()))) {
+                    check.add(pageViews.get(position % pageViews.size()));
+                    ((ViewPager) container).addView(pageViews.get(position % pageViews.size()));
+                    Log.i("instantiateItem", "----------------------------------------------");
+                }
+                return pageViews.get(position % pageViews.size());
+            } else if (pageCount == 2) {
+                check.add(pageViews.get(position % pageViews.size()));
+                ((ViewPager) container).addView(pageViews.get(position % pageViews.size()));
+                Log.i("instantiateItem", "----------------------------------------------");
             }
-            container.addView(pageViews.get((position % pageViews.size())));
-
-            return pageViews.get((position % pageViews.size()));
+            return pageViews.get((position) % pageViews.size());
         }
     }
 
@@ -210,30 +259,33 @@ public class Fragment1 extends Fragment {
      */
     class GuidePageChangeListener implements ViewPager.OnPageChangeListener {
         int lastPosition = 0;
+
         @Override
         public void onPageScrollStateChanged(int arg0) {
             // TODO Auto-generated method stub
-           // Log.i("StateChanged",arg0+"");
-            if (arg0==1){
-                  lastPosition =currentPosition;
-            }else if (arg0==2){
+            // Log.i("StateChanged",arg0+"");
+            if (arg0 == 1) {
+                lastPosition = currentPosition;
+            } else if (arg0 == 2) {
 
-            }else if(arg0==0){
-               if(lastPosition >currentPosition){
+            } else if (arg0 == 0) {
+                if (lastPosition > currentPosition) {
 //                   Log.i("onPageScrolled","left");
-                   direction=1;
-               }else if (lastPosition <currentPosition){
+                    direction = 1;
+                } else if (lastPosition < currentPosition) {
 //                   Log.i("onPageScrolled","right");
-                   direction =2;
-               }
+                    direction = 2;
+                }
             }
 
         }
-        int currentPosition =0;
+
+        int currentPosition = 0;
+
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {
             // TODO Auto-generated method stub
-          //  Log.i("onPageScrolled",arg0+"");
+            //  Log.i("onPageScrolled",arg0+"");
 //            if(mark==arg0){
 //                Log.i("onPageScrolled","right");
 //            }else{
@@ -244,12 +296,12 @@ public class Fragment1 extends Fragment {
         //在指引页面更改事件监听器(GuidePageChangeListener)中要确保在切换页面时下面的圆点图片也跟着改变
         @Override
         public void onPageSelected(int arg0) {
-           // Log.i("onPageSelected",arg0+"");
-            currentPosition =arg0;
+            // Log.i("onPageSelected",arg0+"");
+            currentPosition = arg0;
             for (int i = 0; i < smallDots.length; i++) {
-                smallDots[arg0%smallDots.length]
+                smallDots[arg0 % smallDots.length]
                         .setBackgroundResource(R.mipmap.page_indicator);
-                if (arg0%smallDots.length != i) {
+                if (arg0 % smallDots.length != i) {
                     smallDots[i]
                             .setBackgroundResource(R.mipmap.page_indicator_focused);
                 }

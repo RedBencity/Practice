@@ -261,12 +261,22 @@ public class Util {
     public static int getAppVersion(Context context) {
         try {
             PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            Util.println("Util",info.versionCode+"sssssssssssssssssssssss");
             return info.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
         return 1;
     }
-
+    //获取版本号
+    public static String getAppVersionName(Context context) {
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return info.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "1.0";
+    }
 
 }
