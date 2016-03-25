@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:gravity="center"
     android:paddingBottom="10dp"
@@ -24,7 +25,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/icon"
-        android:text="排行榜" />
+        tools:text="排行榜" />
 
     <ImageView
         android:id="@+id/item_arrow_right"

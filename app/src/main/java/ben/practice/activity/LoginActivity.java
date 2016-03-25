@@ -351,8 +351,8 @@ public class LoginActivity extends AppCompatActivity {
     //开始登录
     private void startLogin() {
 
-//        if (isSuccess.equals("true")) {
-        if (true) {
+        if (isSuccess.equals("true")) {
+//        if (true) {
             getServerPhoto();
             Animation loAnimRotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
             Animation loAnimScale = AnimationUtils.loadAnimation(this, R.anim.login_photo_scale_small);
@@ -369,7 +369,8 @@ public class LoginActivity extends AppCompatActivity {
                 public void onAnimationEnd(Animation animation) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     editor.putString("phone", login_edit_username.getText().toString());
-                    editor.putString("nickname","ben");
+                    if(preferences.getString("nickname","ben").equals("ben"))
+                    editor.putString("nickname","user"+login_edit_username.getText().toString().substring(7,10));
                     editor.commit();
                     finish();
                     startActivity(intent);
@@ -452,8 +453,9 @@ public class LoginActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                startLogin();
-//                slideBack();
+//                startLogin();
+//                isSuccess = "true";
+                slideBack();
                 Util.setToast(LoginActivity.this, "服务器异常!");
                 Log.e("TAG", error.getMessage(), error);
             }

@@ -8,8 +8,8 @@ android {
         applicationId "ben.practice"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 1
-        versionName "2.0"
+        versionCode 4
+        versionName "4.0"
     }
     buildTypes {
         release {
