@@ -37,6 +37,14 @@ import ben.practice.R;
  */
 public class Util {
 
+    public static String patchZero(int i) {
+        String str = String.valueOf(i);
+        if (str.length() == 1) {
+            str = "0" + str;
+        }
+        return str;
+    }
+
     //关闭键盘
     public static void colseKeybord(EditText editText, Context context) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -110,14 +118,14 @@ public class Util {
         System.out.println("measure width=" + width + " height=" + height);
     }
 
-    public static void println(Class c,Object string) {
+    public static void println(Class c, Object string) {
         String className = c.getName();
-        System.out.println(className+"------->"+ string);
+        System.out.println(className + "------->" + string);
     }
 
-    public static void println(Object o,Object string) {
+    public static void println(Object o, Object string) {
         String className = o.getClass().getName();
-        System.out.println(className+"------->"+ string);
+        System.out.println(className + "------->" + string);
     }
 
     public static void println(Object string) {
@@ -135,13 +143,12 @@ public class Util {
     }
 
 
-
     public static void setToast(Activity activity, String str) {
         Toast toast = Toast.makeText(activity, str, Toast.LENGTH_SHORT);
         toast.show();
     }
 
-    public static void setToast(Activity activity, String str,int duration) {
+    public static void setToast(Activity activity, String str, int duration) {
         Toast toast = Toast.makeText(activity, str, duration);
         toast.show();
     }
@@ -181,20 +188,21 @@ public class Util {
         return (cachePath + File.separator + uniqueName);
     }
 
-    public static boolean isFile(String path){
-        File file=new File(path);
-        if(file.exists())
-        {
+    public static boolean isFile(String path) {
+        File file = new File(path);
+        if (file.exists()) {
             return true;
         }
-            return false;
+        return false;
     }
-    public static String getPhotoPath(Context context,String fileName){
-        String path =  Util.getDiskCacheDirName(context, "practice")+File.separator+ fileName+".png";
+
+    public static String getPhotoPath(Context context, String fileName) {
+        String path = Util.getDiskCacheDirName(context, "practice") + File.separator + fileName + ".png";
         return path;
     }
 
-    public static String USERNAME ;
+    public static String USERNAME;
+
     //下载图片
     public static boolean downloadUrlToStream(String urlString, OutputStream outputStream) {
         HttpURLConnection urlConnection = null;
@@ -203,7 +211,7 @@ public class Util {
         try {
             final URL url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
-            if (urlConnection.getResponseCode()!=urlConnection.HTTP_NOT_FOUND ){
+            if (urlConnection.getResponseCode() != urlConnection.HTTP_NOT_FOUND) {
                 in = new BufferedInputStream(urlConnection.getInputStream(), 8 * 1024);
                 out = new BufferedOutputStream(outputStream, 8 * 1024);
                 int b;
@@ -261,13 +269,14 @@ public class Util {
     public static int getAppVersion(Context context) {
         try {
             PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            Util.println("Util",info.versionCode+"sssssssssssssssssssssss");
+            Util.println("Util", info.versionCode + "sssssssssssssssssssssss");
             return info.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
         return 1;
     }
+
     //获取版本号
     public static String getAppVersionName(Context context) {
         try {

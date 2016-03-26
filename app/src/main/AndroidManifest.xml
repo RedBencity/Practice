@@ -63,7 +63,8 @@
             android:exported="true" />
 
         <activity android:name=".activity.SettingsActivity" />
-        <activity android:name=".activity.AboutActivity"></activity>
+        <activity android:name=".activity.AboutActivity" />
+        <activity android:name=".activity.HistoryActivity"></activity>
     </application>
 
 </manifest>

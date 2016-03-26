@@ -26,6 +26,7 @@ import java.util.Locale;
 
 import ben.practice.R;
 import ben.practice.activity.SubjectActivity;
+import ben.practice.activity.HistoryActivity;
 import ben.practice.listener.OnFragmentInteractionListener;
 
 
@@ -74,6 +75,13 @@ public class Fragment1 extends Fragment {
                 wisdom.setText("少壮不努力，老大徒伤悲！");
             } else if (i == 1) {
                 view = LayoutInflater.from(getActivity()).inflate(R.layout.viewpager_head_message2, null);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                          Intent intent = new Intent(getActivity(), HistoryActivity.class);
+                        startActivity(intent);
+                    }
+                });
             } else if (i == 2) {
                 view = LayoutInflater.from(getActivity()).inflate(R.layout.viewpager_head_message3, null);
             }

@@ -124,7 +124,7 @@ public class Fragment3 extends Fragment {
                             intent = new Intent(getActivity(), CollectActivity.class);
                             startActivity(intent);
                         } else if (textView.getText().equals("做题统计")) {
-                            Util.setToast(getActivity(), "aaaaaa");
+                            Util.setToast(getActivity(), "暂未开放！");
                         } else if ((textView.getText().equals("我的消息"))) {
                             intent = new Intent(getActivity(), MessageActivity.class);
                             startActivity(intent);

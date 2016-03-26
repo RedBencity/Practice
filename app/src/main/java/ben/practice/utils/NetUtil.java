@@ -11,9 +11,12 @@ final  static public String IP = "42.96.176.131";
 //    final  static public String URL = "http://192.168.56.1:8080/PracticeServer";
     //手机访问
     final  static public String URL = "http://"+IP+":8080/PracticeServer";
-
-
     final static public String downloadApk_URL = "http://"+IP+":8080/PracticeServer/version/app-release.apk";
+
+    //历史上的今天
+    public static String getHistoryURL(String date){
+        return "http://apicloud.mob.com/appstore/history/query?key="+"10f17a96bc3e9"+"&day="+date;
+    }
 
     public static String getPhotoUrl(String username){
         String url = URL + "/photo/"+username+".png";
