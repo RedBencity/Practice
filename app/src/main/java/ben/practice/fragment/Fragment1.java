@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -42,6 +44,14 @@ public class Fragment1 extends Fragment {
     private ImageView smallDot;
     private int pageCount = 3;
     private int direction = 0;
+    private boolean isrunning = true;
+
+    final private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+        }
+    };
 
     public Fragment1() {
         // Required empty public constructor
@@ -78,7 +88,7 @@ public class Fragment1 extends Fragment {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                          Intent intent = new Intent(getActivity(), HistoryActivity.class);
+                        Intent intent = new Intent(getActivity(), HistoryActivity.class);
                         startActivity(intent);
                     }
                 });
@@ -108,7 +118,7 @@ public class Fragment1 extends Fragment {
         viewPager.setAdapter(new QuestionAdapter());
         viewPager.setOnPageChangeListener(new GuidePageChangeListener());
         viewPager.setCurrentItem(pageCount * 10);
-        viewPager.setOffscreenPageLimit(0);
+
     }
 
 
@@ -138,6 +148,37 @@ public class Fragment1 extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isrunning = false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isrunning = true;
+        new Thread() {
+            @Override
+            public void run() {
+                while (isrunning) {
+                    try {
+                        sleep(4000);
+                        handler.sendEmptyMessage(0);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        isrunning = false;
     }
 
     class SubjectAdapter extends BaseAdapter {
@@ -224,7 +265,7 @@ public class Fragment1 extends Fragment {
         @Override
         public void destroyItem(ViewGroup container, int position,
                                 Object object) {
-            Log.i("destroyItem", position + 1 + "");
+//            Log.i("destroyItem", position + 1 + "");
             if (pageCount == 2) {
                 ((ViewPager) container).removeView(pageViews.get(position % pageViews.size()));
             }
@@ -237,7 +278,7 @@ public class Fragment1 extends Fragment {
         //自己维护item，确保左右滑动不会出BUG
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            Log.i("instantiateItem", position + 1 + "");
+//            Log.i("instantiateItem", position + 1 + "");
             if (pageCount == 3) {
                 if (direction == 1) {
                     check.remove(pageViews.get((position + 3) % pageViews.size()));
@@ -250,13 +291,13 @@ public class Fragment1 extends Fragment {
                 if (!check.contains(pageViews.get(position % pageViews.size()))) {
                     check.add(pageViews.get(position % pageViews.size()));
                     ((ViewPager) container).addView(pageViews.get(position % pageViews.size()));
-                    Log.i("instantiateItem", "----------------------------------------------");
+//                    Log.i("instantiateItem", "----------------------------------------------");
                 }
                 return pageViews.get(position % pageViews.size());
             } else if (pageCount == 2) {
                 check.add(pageViews.get(position % pageViews.size()));
                 ((ViewPager) container).addView(pageViews.get(position % pageViews.size()));
-                Log.i("instantiateItem", "----------------------------------------------");
+//                Log.i("instantiateItem", "----------------------------------------------");
             }
             return pageViews.get((position) % pageViews.size());
         }

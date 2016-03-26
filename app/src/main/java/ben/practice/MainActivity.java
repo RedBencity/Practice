@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stopService(serviceIntent);
+//        stopService(serviceIntent);
 
     }
 
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setChoiceItem(0);
         serviceIntent = new Intent(MainActivity.this, MessageService.class);
 
-        startService(serviceIntent);
+//        startService(serviceIntent);
     }
 
 
