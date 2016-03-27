@@ -67,7 +67,7 @@ public class SubjectActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getCountCondition();
+
     }
 
     private void initView() {
@@ -95,6 +95,7 @@ public class SubjectActivity extends AppCompatActivity {
                 }
             }
         };
+        getCountCondition();
 
     }
 

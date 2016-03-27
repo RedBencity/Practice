@@ -515,18 +515,24 @@ public class LoginActivity extends AppCompatActivity {
                     Util.setToast(LoginActivity.this, "您已注册过，直接登录！");
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     editor.putString("phone", phone);
-                    editor.putString("nickname","ben");
+                    if(preferences.getString("nickname","ben").equals("ben"))
+                        editor.putString("nickname","user"+login_edit_username.getText().toString().substring(7,10));
                     editor.commit();
-                    finish();
-                    startActivity(intent);
+//                    finish();
+//                    startActivity(intent);
+                    isSuccess = "true";
+                    startLogin();
                 }else {
                     Util.setToast(LoginActivity.this, "注册成功！请尽快修改密码！");
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     editor.putString("phone", phone);
-                    editor.putString("nickname","ben");
+                    if(preferences.getString("nickname","ben").equals("ben"))
+                        editor.putString("nickname","user"+login_edit_username.getText().toString().substring(7,10));
                     editor.commit();
-                    finish();
-                    startActivity(intent);
+//                    finish();
+//                    startActivity(intent);
+                    isSuccess = "true";
+                    startLogin();
                 }
 
             }
@@ -570,7 +576,7 @@ public class LoginActivity extends AppCompatActivity {
         }, 0, 0, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Util.setToast(LoginActivity.this, "获取头像失败！");
+//                Util.setToast(LoginActivity.this, "获取头像失败！");
                 login_img_photo.setImageResource(R.mipmap.icon_default_avatar);
             }
         });
