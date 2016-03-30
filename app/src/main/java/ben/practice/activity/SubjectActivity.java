@@ -123,7 +123,7 @@ public class SubjectActivity extends AppCompatActivity {
         if (subject.equals("英语")) {
             point = new String[]{"副词", "介词", "时态", "形容词"};
         } else if (subject.equals("语文")) {
-            point = new String[]{"副词", "介词"};
+            point = new String[]{"文字应用"};
         } else if (subject.equals("数学")) {
             point = new String[]{"副词", "介词", "时态"};
         }
