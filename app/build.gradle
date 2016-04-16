@@ -39,6 +39,7 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+    //网络通信
     compile files('libs/volley.jar')
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
@@ -46,8 +47,11 @@ dependencies {
     compile files('libs/httpclient-4.3.5.jar')
     compile files('libs/httpcore-4.3.2.jar')
     compile files('libs/httpmime-4.3.5.jar')
-
+    //mob短信验证包
     compile name: 'SMSSDK-2.0.1', ext: 'aar'
     compile name: 'SMSSDKGUI-2.0.1', ext: 'aar'
+
+    compile 'io.reactivex:rxjava:1.1.2'
+    compile 'io.reactivex:rxandroid:1.1.0'
 
 }
