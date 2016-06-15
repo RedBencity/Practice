@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
-        android:text="共5道题，还有4道没做" />
+        android:text="共10道题，还有9道没做" />
 
     <View
         android:layout_width="match_parent"

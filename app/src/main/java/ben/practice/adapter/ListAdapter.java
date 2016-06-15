@@ -288,7 +288,7 @@ public class ListAdapter extends BaseAdapter {
         }, 0, 0, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Util.setToast(activity, "获取头像失败！");
+//                Util.setToast(activity, "获取头像失败！");
                 textView.setBackgroundResource(R.mipmap.icon_default_avatar);
             }
         });
@@ -309,7 +309,7 @@ public class ListAdapter extends BaseAdapter {
         }, 0, 0, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Util.setToast(activity, "获取头像失败！");
+//                Util.setToast(activity, "获取头像失败！");
                 imageView.setBackgroundResource(R.mipmap.icon_default_avatar);
             }
         });

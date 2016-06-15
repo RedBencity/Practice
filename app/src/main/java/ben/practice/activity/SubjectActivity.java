@@ -125,7 +125,7 @@ public class SubjectActivity extends AppCompatActivity {
         } else if (subject.equals("语文")) {
             point = new String[]{"文字应用"};
         } else if (subject.equals("数学")) {
-            point = new String[]{"副词", "介词", "时态"};
+            point = new String[]{"数列", "矩阵", "函数"};
         }
         for (int i = 0; i < point.length; i++) {
             practicePointInfos.add(new PracticePointInfo(point[i]));
@@ -191,12 +191,9 @@ public class SubjectActivity extends AppCompatActivity {
     private void getQuestion(final String subject, final String point_name, final Intent intent) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String url = NetUtil.URL + "/servlet/QuestionServer";
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-//                System.out.println(response);
-
                 if (response.equals("no_file")) {
                     Util.setToast(SubjectActivity.this, "暂时没有题目！");
                 } else if (response.equals("all_do")) {
@@ -208,7 +205,6 @@ public class SubjectActivity extends AppCompatActivity {
                     for (int i = 0; i < questions.length - 1; i++) {
                         String[] list = questions[i].split("&");
                         for (int j = 0; j < list.length; j++) {
-//                        System.out.println((j+1)+"------->"+list.length+"------>"+list[j]);
                         }
                         System.out.println();
                         String title = list[0];
@@ -218,7 +214,6 @@ public class SubjectActivity extends AppCompatActivity {
                         String d = list[4];
                         String answer = list[5];
                         String analyze = list[6];
-//                    System.out.println(title+" "+a+" "+b+" "+c+" "+d+" "+answer+" "+analyze);
                         question = new Question(title, a, b, c, d, answer, analyze, subject, point_name);
                         questionArrayList.add(question);
                     }
@@ -243,7 +238,11 @@ public class SubjectActivity extends AppCompatActivity {
                 map.put("requestType", "getQuestion");
                 map.put("phone", preferences.getString("phone", "default"));
                 map.put("subject", subject);
-                map.put("point", point_name);
+                if (subject.equals("数学")){
+                    map.put("point", "介词");
+                }else {
+                    map.put("point", point_name);
+                }
                 return map;
             }
         };
@@ -257,7 +256,6 @@ public class SubjectActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-//                Util.println(SubjectActivity.this, response);
                 String[] strs = response.split("@");
                 right_count = Integer.parseInt(strs[0]);
                 total_count = Integer.parseInt(strs[1]);

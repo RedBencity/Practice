@@ -88,7 +88,6 @@ public class MarkActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-//                    System.out.println(response);
                 if (!response.equals("no")) {
                     Question question;
                     String[] str = response.split("#");
@@ -112,7 +111,6 @@ public class MarkActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
                 Util.setToast(MarkActivity.this, "服务器异常!");
                 Log.e("TAG", error.getMessage(), error);
             }

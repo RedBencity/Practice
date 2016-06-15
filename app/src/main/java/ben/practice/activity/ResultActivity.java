@@ -172,7 +172,6 @@ public class ResultActivity extends AppCompatActivity {
                    startActivity(intent);
                }
            });
-
             return convertView;
         }
     }

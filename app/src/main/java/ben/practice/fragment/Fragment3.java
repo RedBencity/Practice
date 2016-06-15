@@ -59,7 +59,7 @@ public class Fragment3 extends Fragment {
                 R.mipmap.icon_misc_settings};
         preferences = getActivity().getSharedPreferences("constants", getActivity().MODE_PRIVATE);
         editor = preferences.edit();
-        item_name = new String[]{nickname, "收藏", "做题统计", "我的消息", "设置"};
+        item_name = new String[]{nickname, "收藏", "我的消息", "设置"};
         listAdapter = new ListAdapter(getActivity(), icons, item_name);
         listView.setAdapter(listAdapter);
         getNicknameFromServer();

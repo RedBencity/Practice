@@ -39,8 +39,6 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback, 
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStrokeWidth(3);
-//        paint.setAlpha(0);
-//        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
         paint.setStyle(Paint.Style.STROKE);
 
         surfaceHolder = getHolder();
@@ -74,17 +72,14 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback, 
             case MotionEvent.ACTION_DOWN:
                 x1 = event.getX();
                 y1 = event.getY();
-//                System.out.println(x1 + " " + y1);
                 path.reset();
                 path.moveTo(event.getX(), event.getY());
 
                 break;
             case MotionEvent.ACTION_MOVE:
-//                System.out.println(x1 + " " + y1);
                 final float x2 = (event.getX() + x1) / 2;
                 final float y2 = (event.getY() + y1) / 2;
                 path.quadTo(x1, y1, x2, y2);
-//                path.quadTo(x2, y2, event.getX(),event.getY());
                 x1 = event.getX();
                 y1 = event.getY();
                 break;

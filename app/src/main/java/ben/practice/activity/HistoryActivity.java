@@ -90,7 +90,6 @@ public class HistoryActivity extends AppCompatActivity implements AbsListView.On
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-//                System.out.println(response);
                 response = response.replace("\\n", "\n");
                 try {
                     History history;

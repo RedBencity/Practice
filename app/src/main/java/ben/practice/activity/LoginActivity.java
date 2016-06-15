@@ -453,8 +453,6 @@ public class LoginActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                startLogin();
-//                isSuccess = "true";
                 slideBack();
                 Util.setToast(LoginActivity.this, "服务器异常!");
                 Log.e("TAG", error.getMessage(), error);
